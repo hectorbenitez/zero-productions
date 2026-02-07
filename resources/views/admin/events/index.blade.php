@@ -23,6 +23,7 @@
                 <table class="w-full">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
+                            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider w-16">ID</th>
                             <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Evento</th>
                             <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
                             <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Ubicación</th>
@@ -33,6 +34,9 @@
                     <tbody class="divide-y divide-gray-200">
                         @foreach($events as $event)
                             <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <span class="text-sm font-mono text-gray-500">{{ $event->id }}</span>
+                                </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">

@@ -15,7 +15,7 @@
     <!-- Event Form -->
     <div class="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
         <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-            <h1 class="text-xl font-bold text-gray-900">Editar Evento</h1>
+            <h1 class="text-xl font-bold text-gray-900">Editar Evento <span class="text-sm font-normal text-gray-400">(ID: {{ $event->id }})</span></h1>
             <a href="{{ route('events.show', $event) }}" target="_blank" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
                 Ver en el sitio →
             </a>
