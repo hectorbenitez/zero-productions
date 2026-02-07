@@ -202,7 +202,7 @@ class EventController extends Controller
             $oldCover->delete();
         }
 
-        // Create new image record
+        // Create new image record (base64 encode for PostgreSQL compatibility)
         $image = Image::create([
             'event_id' => $event->id,
             'kind' => 'cover',
@@ -210,7 +210,7 @@ class EventController extends Controller
             'filename' => $file->getClientOriginalName(),
             'byte_size' => $file->getSize(),
             'checksum' => md5_file($file->getRealPath()),
-            'data' => file_get_contents($file->getRealPath()),
+            'data' => base64_encode(file_get_contents($file->getRealPath())),
         ]);
 
         // Update event with cover image reference
@@ -229,7 +229,7 @@ class EventController extends Controller
             $oldFlyer->delete();
         }
 
-        // Create new image record
+        // Create new image record (base64 encode for PostgreSQL compatibility)
         $image = Image::create([
             'event_id' => $event->id,
             'kind' => 'flyer',
@@ -237,7 +237,7 @@ class EventController extends Controller
             'filename' => $file->getClientOriginalName(),
             'byte_size' => $file->getSize(),
             'checksum' => md5_file($file->getRealPath()),
-            'data' => file_get_contents($file->getRealPath()),
+            'data' => base64_encode(file_get_contents($file->getRealPath())),
         ]);
 
         // Update event with flyer image reference

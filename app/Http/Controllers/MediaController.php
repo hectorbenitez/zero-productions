@@ -16,19 +16,14 @@ class MediaController extends Controller
         // Reload the image with the binary data column included
         $image = Image::withData()->findOrFail($image->id);
 
-        // Get the binary data
-        $data = $image->data;
-
-        // Handle PostgreSQL bytea encoding if needed
-        if (is_resource($data)) {
-            $data = stream_get_contents($data);
-        }
+        // Decode from base64 storage
+        $data = base64_decode($image->data);
 
         // Create response with proper headers
         $response = response($data);
         
         $response->header('Content-Type', $image->mime_type);
-        $response->header('Content-Length', $image->byte_size);
+        $response->header('Content-Length', strlen($data));
         
         // Cache headers - cache for 1 week since images rarely change
         $response->header('Cache-Control', 'public, max-age=604800');

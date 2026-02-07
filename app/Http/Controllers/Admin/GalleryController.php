@@ -51,7 +51,7 @@ class GalleryController extends Controller
                 'filename' => $file->getClientOriginalName(),
                 'byte_size' => $file->getSize(),
                 'checksum' => md5_file($file->getRealPath()),
-                'data' => file_get_contents($file->getRealPath()),
+                'data' => base64_encode(file_get_contents($file->getRealPath())),
                 'position' => $position++,
             ]);
         }
