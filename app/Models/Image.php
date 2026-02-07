@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +30,33 @@ class Image extends Model
     protected $hidden = [
         'data',
     ];
+
+    /**
+     * Columns to select by default (excludes binary 'data' column).
+     */
+    protected static array $defaultColumns = [
+        'id', 'event_id', 'kind', 'mime_type', 'filename',
+        'byte_size', 'checksum', 'caption', 'position',
+        'created_at', 'updated_at',
+    ];
+
+    /**
+     * Boot the model - exclude 'data' column from default queries.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('exclude_data', function (Builder $builder) {
+            $builder->select(static::$defaultColumns);
+        });
+    }
+
+    /**
+     * Scope to include the binary data column (for serving images).
+     */
+    public function scopeWithData(Builder $query): Builder
+    {
+        return $query->withoutGlobalScope('exclude_data');
+    }
 
     /**
      * Get the event that owns the image.

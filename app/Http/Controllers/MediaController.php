@@ -13,6 +13,9 @@ class MediaController extends Controller
      */
     public function show(Image $image): Response
     {
+        // Reload the image with the binary data column included
+        $image = Image::withData()->findOrFail($image->id);
+
         // Get the binary data
         $data = $image->data;
 
