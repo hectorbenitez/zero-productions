@@ -31,7 +31,9 @@ Route::get('/media/{image}', [MediaController::class, 'show'])->name('media.show
 
 // Contact
 Route::get('/contacto', [ContactController::class, 'show'])->name('contact.show');
-Route::post('/contacto', [ContactController::class, 'submit'])->name('contact.submit');
+Route::post('/contacto', [ContactController::class, 'submit'])
+    ->middleware('throttle:3,1')
+    ->name('contact.submit');
 
 /*
 |--------------------------------------------------------------------------

@@ -36,6 +36,21 @@
                     <form action="{{ route('contact.submit') }}" method="POST" class="space-y-6">
                         @csrf
 
+                        {{-- Honeypot: hidden field that bots auto-fill --}}
+                        <div style="position: absolute; left: -9999px;" aria-hidden="true">
+                            <label for="website">Website</label>
+                            <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" value="">
+                        </div>
+
+                        {{-- Timestamp to detect instant bot submissions --}}
+                        <input type="hidden" name="_form_loaded_at" value="{{ now()->timestamp }}">
+
+                        @if($errors->has('spam'))
+                            <div class="mb-2 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+                                <p class="text-red-400">{{ $errors->first('spam') }}</p>
+                            </div>
+                        @endif
+
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Nombre *</label>
                             <input type="text" 

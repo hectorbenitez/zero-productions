@@ -7,6 +7,7 @@ use App\Models\SiteSetting;
 use App\Mail\ContactFormSubmitted;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
@@ -29,6 +30,22 @@ class ContactController extends Controller
      */
     public function submit(Request $request): RedirectResponse
     {
+        // Anti-spam: honeypot check (bots fill hidden fields)
+        if ($request->filled('website')) {
+            Log::warning('Spam blocked (honeypot)', ['ip' => $request->ip()]);
+            return redirect()->route('contact.show')
+                ->with('success', '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+        }
+
+        // Anti-spam: minimum time check (reject submissions under 3 seconds)
+        $loadedAt = (int) $request->input('_form_loaded_at', 0);
+        if ($loadedAt > 0 && (now()->timestamp - $loadedAt) < 3) {
+            Log::warning('Spam blocked (too fast)', ['ip' => $request->ip(), 'seconds' => now()->timestamp - $loadedAt]);
+            return redirect()->route('contact.show')
+                ->withErrors(['spam' => 'El formulario se envió demasiado rápido. Por favor, inténtalo de nuevo.'])
+                ->withInput();
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
@@ -53,7 +70,7 @@ class ContactController extends Controller
             Mail::to($settings->contact_email)->send(new ContactFormSubmitted($contactMessage));
         } catch (\Exception $e) {
             // Log the error but don't fail the request
-            \Log::error('Failed to send contact email: ' . $e->getMessage());
+            Log::error('Failed to send contact email: ' . $e->getMessage());
         }
 
         return redirect()
