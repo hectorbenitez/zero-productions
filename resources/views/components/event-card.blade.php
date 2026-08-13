@@ -33,7 +33,7 @@
     <div class="p-5">
         <!-- Date Badge -->
         <div class="flex items-center gap-2 mb-3">
-            <div class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
+            <div class="{{ $event->isPast() ? 'bg-neutral-600' : 'bg-blue-500' }} text-white text-xs font-bold px-2 py-1 rounded">
                 {{ $event->event_datetime->format('d') }}
                 <span class="uppercase">{{ $event->event_datetime->translatedFormat('M') }}</span>
             </div>
