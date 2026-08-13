@@ -7,6 +7,7 @@ use App\Models\SiteSetting;
 use App\Mail\ContactFormSubmitted;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
@@ -46,6 +47,13 @@ class ContactController extends Controller
                 ->withInput();
         }
 
+        // Anti-spam: Cloudflare Turnstile (skipped when keys are not configured)
+        if (config('services.turnstile.secret_key') && ! $this->passesTurnstile($request)) {
+            return redirect()->route('contact.show')
+                ->withErrors(['spam' => 'No pudimos verificar que eres una persona. Por favor, inténtalo de nuevo.'])
+                ->withInput();
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
@@ -76,5 +84,35 @@ class ContactController extends Controller
         return redirect()
             ->route('contact.show')
             ->with('success', '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+    }
+
+    /**
+     * Verify the Cloudflare Turnstile token. Fails open if Cloudflare is unreachable,
+     * leaving the honeypot and timing checks as fallback protection.
+     */
+    private function passesTurnstile(Request $request): bool
+    {
+        try {
+            $response = Http::asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+                'secret' => config('services.turnstile.secret_key'),
+                'response' => $request->input('cf-turnstile-response'),
+                'remoteip' => $request->ip(),
+            ]);
+
+            if ($response->json('success') === true) {
+                return true;
+            }
+
+            Log::warning('Spam blocked (turnstile)', [
+                'ip' => $request->ip(),
+                'errors' => $response->json('error-codes'),
+            ]);
+
+            return false;
+        } catch (\Exception $e) {
+            Log::error('Turnstile verification unavailable: ' . $e->getMessage());
+
+            return true;
+        }
     }
 }

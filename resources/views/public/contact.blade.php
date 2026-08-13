@@ -92,7 +92,11 @@
                             @enderror
                         </div>
 
-                        <button type="submit" 
+                        @if(config('services.turnstile.site_key'))
+                            <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="dark"></div>
+                        @endif
+
+                        <button type="submit"
                                 class="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/25">
                             Enviar Mensaje
                             <svg class="w-5 h-5 inline ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,3 +218,9 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    @if(config('services.turnstile.site_key'))
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    @endif
+@endpush
