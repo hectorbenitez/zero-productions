@@ -6,11 +6,18 @@
 @section('content')
     <!-- Hero Section -->
     <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
-        <!-- Background Image -->
+        <!-- Background Images (rotating event covers, static fallback) -->
         <div class="absolute inset-0">
-            <img src="{{ asset('assets/hero-background.jpg') }}" 
-                 alt="" 
-                 class="w-full h-full object-cover object-bottom">
+            @forelse($heroImages as $src)
+                <img src="{{ $src }}"
+                     alt=""
+                     data-hero-slide
+                     class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 {{ $loop->first ? 'opacity-100' : 'opacity-0' }}">
+            @empty
+                <img src="{{ asset('assets/hero-background.jpg') }}"
+                     alt=""
+                     class="absolute inset-0 w-full h-full object-cover object-bottom">
+            @endforelse
             <!-- Overlay -->
             <div class="absolute inset-0 bg-black/60"></div>
             <!-- Gradient overlay for better text readability -->
@@ -55,14 +62,14 @@
         </div>
     </section>
 
-    <!-- Upcoming Events Section -->
-    @if($upcomingEvents->count() > 0)
+    <!-- Events Section -->
+    @if($events->count() > 0)
         <section class="py-20 bg-neutral-900/50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between mb-10">
                     <div>
-                        <h2 class="font-display text-3xl sm:text-4xl text-white tracking-wide">Próximos Eventos</h2>
-                        <p class="text-gray-400 mt-2">No te pierdas nuestros eventos</p>
+                        <h2 class="font-display text-3xl sm:text-4xl text-white tracking-wide">Eventos</h2>
+                        <p class="text-gray-400 mt-2">No te pierdas lo que viene y revive nuestros eventos pasados</p>
                     </div>
                     <a href="{{ route('events.index') }}" 
                        class="hidden sm:inline-flex items-center text-blue-500 hover:text-blue-400 font-medium transition-colors">
@@ -74,7 +81,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($upcomingEvents as $event)
+                    @foreach($events as $event)
                         @include('components.event-card', ['event' => $event])
                     @endforeach
                 </div>
@@ -148,4 +155,17 @@
         animation: fadeIn 0.8s ease-out 0.4s forwards;
     }
 </style>
+<script>
+    (function () {
+        const slides = document.querySelectorAll('[data-hero-slide]');
+        if (slides.length < 2) return;
+
+        let current = 0;
+        setInterval(function () {
+            slides[current].classList.replace('opacity-100', 'opacity-0');
+            current = (current + 1) % slides.length;
+            slides[current].classList.replace('opacity-0', 'opacity-100');
+        }, 6000);
+    })();
+</script>
 @endpush
