@@ -68,7 +68,7 @@
                     </div>
 
                     <div>
-                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Ubicación</label>
                         <input type="text" 
                                name="address" 
                                id="address" 

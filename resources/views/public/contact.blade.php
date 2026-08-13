@@ -152,7 +152,7 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-white font-medium mb-1">Dirección</h3>
+                                    <h3 class="text-white font-medium mb-1">Ubicación</h3>
                                     <p class="text-gray-400">{{ $settings->address }}</p>
                                 </div>
                             </div>
