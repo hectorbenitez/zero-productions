@@ -11,13 +11,13 @@
             @forelse($heroImages as $src)
                 <div data-hero-slide
                      class="absolute inset-0 transition-opacity duration-1000 {{ $loop->first ? 'opacity-100' : 'opacity-0' }}">
-                    <!-- Poster wall: the cover repeated edge to edge at full height -->
+                    <!-- Poster wall: the cover repeated edge to edge at full height, center copy highlighted -->
                     <div class="absolute inset-0 flex justify-center overflow-hidden">
-                        @for($i = 0; $i < 6; $i++)
+                        @for($i = 0; $i < 7; $i++)
                             <img src="{{ $src }}"
                                  alt=""
-                                 @if($i > 0) aria-hidden="true" @endif
-                                 class="h-full w-auto max-w-none flex-none">
+                                 @if($i !== 3) aria-hidden="true" @endif
+                                 class="h-full w-auto max-w-none flex-none {{ $i === 3 ? '' : 'brightness-[.35]' }}">
                         @endfor
                     </div>
                 </div>
