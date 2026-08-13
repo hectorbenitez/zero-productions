@@ -12,7 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('ALTER TABLE images ALTER COLUMN data TYPE text USING encode(data, \'base64\')');
+        // PostgreSQL-only conversion; SQLite (used in tests) stores base64 text in the blob column as-is
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE images ALTER COLUMN data TYPE text USING encode(data, \'base64\')');
+        }
     }
 
     /**
@@ -20,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('ALTER TABLE images ALTER COLUMN data TYPE bytea USING decode(data, \'base64\')');
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE images ALTER COLUMN data TYPE bytea USING decode(data, \'base64\')');
+        }
     }
 };
