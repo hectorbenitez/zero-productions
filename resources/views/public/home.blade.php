@@ -11,15 +11,15 @@
             @forelse($heroImages as $src)
                 <div data-hero-slide
                      class="absolute inset-0 transition-opacity duration-1000 {{ $loop->first ? 'opacity-100' : 'opacity-0' }}">
-                    <!-- Blurred full-bleed backdrop -->
-                    <img src="{{ $src }}"
-                         alt=""
-                         aria-hidden="true"
-                         class="absolute inset-0 w-full h-full object-cover blur-2xl scale-110">
-                    <!-- Sharp poster, letterboxed over the blur -->
-                    <img src="{{ $src }}"
-                         alt=""
-                         class="absolute inset-0 w-full h-full object-contain">
+                    <!-- Poster wall: the cover repeated edge to edge at full height -->
+                    <div class="absolute inset-0 flex justify-center overflow-hidden">
+                        @for($i = 0; $i < 6; $i++)
+                            <img src="{{ $src }}"
+                                 alt=""
+                                 @if($i > 0) aria-hidden="true" @endif
+                                 class="h-full w-auto max-w-none flex-none">
+                        @endfor
+                    </div>
                 </div>
             @empty
                 <img src="{{ asset('assets/hero-background.jpg') }}"
