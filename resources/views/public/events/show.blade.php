@@ -14,9 +14,9 @@
     <section class="relative">
         <div class="h-64 sm:h-80 md:h-96 bg-neutral-900 relative overflow-hidden">
             @if($event->coverImage)
-                <img src="{{ route('media.show', $event->coverImage) }}" 
+                <img src="{{ route('media.show', $event->coverImage) }}"
                      alt="{{ $event->title }}"
-                     class="w-full h-full object-cover">
+                     class="w-full h-full object-cover object-top">
                 <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent"></div>
             @else
                 <div class="w-full h-full bg-gradient-to-br from-neutral-800 to-neutral-900 flex items-center justify-center">
