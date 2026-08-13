@@ -9,10 +9,18 @@
         <!-- Background Images (rotating event covers, static fallback) -->
         <div class="absolute inset-0">
             @forelse($heroImages as $src)
-                <img src="{{ $src }}"
-                     alt=""
-                     data-hero-slide
-                     class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 {{ $loop->first ? 'opacity-100' : 'opacity-0' }}">
+                <div data-hero-slide
+                     class="absolute inset-0 transition-opacity duration-1000 {{ $loop->first ? 'opacity-100' : 'opacity-0' }}">
+                    <!-- Blurred full-bleed backdrop -->
+                    <img src="{{ $src }}"
+                         alt=""
+                         aria-hidden="true"
+                         class="absolute inset-0 w-full h-full object-cover blur-2xl scale-110">
+                    <!-- Sharp poster, letterboxed over the blur -->
+                    <img src="{{ $src }}"
+                         alt=""
+                         class="absolute inset-0 w-full h-full object-contain">
+                </div>
             @empty
                 <img src="{{ asset('assets/hero-background.jpg') }}"
                      alt=""
