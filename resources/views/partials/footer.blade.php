@@ -25,13 +25,11 @@
             <div>
                 <h4 class="text-sm font-semibold uppercase tracking-wider text-gray-300 mb-4">Contacto</h4>
                 <ul class="space-y-2 text-sm text-gray-400">
-                    @if($settings->contact_email)
-                        <li>
-                            <a href="mailto:{{ $settings->contact_email }}" class="hover:text-white transition-colors">
-                                {{ $settings->contact_email }}
-                            </a>
-                        </li>
-                    @endif
+                    <li>
+                        <a href="{{ route('contact.show') }}" class="hover:text-white transition-colors">
+                            Escríbenos desde el formulario de contacto
+                        </a>
+                    </li>
                     @if($settings->contact_phone)
                         <li>
                             <a href="tel:{{ $settings->contact_phone }}" class="hover:text-white transition-colors">

@@ -111,22 +111,6 @@
                     <h2 class="text-2xl font-semibold text-white mb-6">Información de contacto</h2>
                     
                     <div class="space-y-6">
-                        @if($settings->contact_email)
-                            <div class="flex items-start gap-4">
-                                <div class="flex-shrink-0 w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 class="text-white font-medium mb-1">Correo electrónico</h3>
-                                    <a href="mailto:{{ $settings->contact_email }}" class="text-gray-400 hover:text-blue-500 transition-colors">
-                                        {{ $settings->contact_email }}
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
-
                         @if($settings->contact_phone)
                             <div class="flex items-start gap-4">
                                 <div class="flex-shrink-0 w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center">
