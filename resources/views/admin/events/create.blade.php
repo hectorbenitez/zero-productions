@@ -111,6 +111,19 @@
                     </div>
 
                     <div>
+                        <label for="is_highlighted" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer">
+                            <input type="checkbox"
+                                   name="is_highlighted"
+                                   id="is_highlighted"
+                                   value="1"
+                                   {{ old('is_highlighted') ? 'checked' : '' }}
+                                   class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            Evento destacado
+                        </label>
+                        <p class="mt-1 text-sm text-gray-500">Los eventos pasados solo aparecen en la página de eventos si están destacados.</p>
+                    </div>
+
+                    <div>
                         <label for="cover_image" class="block text-sm font-medium text-gray-700 mb-1">Imagen de Portada</label>
                         <input type="file" 
                                name="cover_image" 

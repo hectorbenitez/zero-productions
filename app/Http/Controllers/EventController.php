@@ -22,6 +22,7 @@ class EventController extends Controller
 
         $pastEvents = Event::published()
             ->past()
+            ->highlighted()
             ->orderBy('event_datetime', 'desc')
             ->get();
 
@@ -43,7 +44,7 @@ class EventController extends Controller
         }
 
         $settings = SiteSetting::instance();
-        
+
         $event->load(['coverImage', 'flyerImage', 'links', 'galleryImages']);
 
         return view('public.events.show', [

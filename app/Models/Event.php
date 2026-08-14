@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class Event extends Model
 {
@@ -22,12 +22,14 @@ class Event extends Model
         'city',
         'event_datetime',
         'status',
+        'is_highlighted',
         'cover_image_id',
         'flyer_image_id',
     ];
 
     protected $casts = [
         'event_datetime' => 'datetime',
+        'is_highlighted' => 'boolean',
     ];
 
     /**
@@ -54,7 +56,7 @@ class Event extends Model
         $count = 1;
 
         while (static::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $count;
+            $slug = $originalSlug.'-'.$count;
             $count++;
         }
 
@@ -126,6 +128,14 @@ class Event extends Model
     }
 
     /**
+     * Scope for highlighted events.
+     */
+    public function scopeHighlighted($query)
+    {
+        return $query->where('is_highlighted', true);
+    }
+
+    /**
      * Check if the event is upcoming.
      */
     public function isUpcoming(): bool
@@ -147,6 +157,7 @@ class Event extends Model
     public function getFormattedDateAttribute(): string
     {
         Carbon::setLocale('es');
+
         return $this->event_datetime->translatedFormat('l, j \d\e F \d\e Y');
     }
 
@@ -155,7 +166,7 @@ class Event extends Model
      */
     public function getFormattedTimeAttribute(): string
     {
-        return $this->event_datetime->format('H:i') . ' hrs';
+        return $this->event_datetime->format('H:i').' hrs';
     }
 
     /**
@@ -164,7 +175,8 @@ class Event extends Model
     public function getFormattedDatetimeAttribute(): string
     {
         Carbon::setLocale('es');
-        return $this->event_datetime->translatedFormat('l, j \d\e F \d\e Y - H:i') . ' hrs';
+
+        return $this->event_datetime->translatedFormat('l, j \d\e F \d\e Y - H:i').' hrs';
     }
 
     /**
@@ -173,6 +185,7 @@ class Event extends Model
     public function getLocationAttribute(): ?string
     {
         $parts = array_filter([$this->venue, $this->city]);
+
         return count($parts) > 0 ? implode(', ', $parts) : null;
     }
 
@@ -186,7 +199,7 @@ class Event extends Model
     {
         $galleryPath = public_path("assets/gallery/{$this->id}");
 
-        if (!File::isDirectory($galleryPath)) {
+        if (! File::isDirectory($galleryPath)) {
             return [];
         }
 

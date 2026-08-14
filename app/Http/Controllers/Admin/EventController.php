@@ -7,7 +7,6 @@ use App\Models\Event;
 use App\Models\Image;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class EventController extends Controller
@@ -47,6 +46,7 @@ class EventController extends Controller
             'city' => ['nullable', 'string', 'max:255'],
             'event_datetime' => ['required', 'date'],
             'status' => ['required', 'in:draft,published'],
+            'is_highlighted' => ['nullable', 'boolean'],
             'cover_image' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:10240'],
             'flyer_image' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:10240'],
         ], $this->validationMessages());
@@ -65,6 +65,7 @@ class EventController extends Controller
             'city' => $validated['city'],
             'event_datetime' => $validated['event_datetime'],
             'status' => $validated['status'],
+            'is_highlighted' => $request->boolean('is_highlighted'),
         ]);
 
         // Handle cover image upload
@@ -101,12 +102,13 @@ class EventController extends Controller
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:events,slug,' . $event->id],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:events,slug,'.$event->id],
             'description' => ['nullable', 'string'],
             'venue' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:255'],
             'event_datetime' => ['required', 'date'],
             'status' => ['required', 'in:draft,published'],
+            'is_highlighted' => ['nullable', 'boolean'],
             'cover_image' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:10240'],
             'flyer_image' => ['nullable', 'image', 'mimes:jpeg,png,webp', 'max:10240'],
         ], $this->validationMessages());
@@ -129,6 +131,7 @@ class EventController extends Controller
             'city' => $validated['city'],
             'event_datetime' => $validated['event_datetime'],
             'status' => $validated['status'],
+            'is_highlighted' => $request->boolean('is_highlighted'),
         ]);
 
         // Handle cover image upload

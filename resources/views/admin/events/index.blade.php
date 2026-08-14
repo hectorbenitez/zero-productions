@@ -64,15 +64,22 @@
                                     {{ $event->location ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    @if($event->status === 'published')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            Publicado
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                            Borrador
-                                        </span>
-                                    @endif
+                                    <div class="flex items-center gap-1.5">
+                                        @if($event->status === 'published')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Publicado
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                Borrador
+                                            </span>
+                                        @endif
+                                        @if($event->is_highlighted)
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800" title="Evento destacado">
+                                                ★ Destacado
+                                            </span>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
