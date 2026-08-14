@@ -36,12 +36,8 @@ class HomeController extends Controller
             );
         }
 
-        $heroImages = Event::published()
-            ->whereNotNull('cover_image_id')
-            ->with('coverImage')
-            ->orderBy('event_datetime', 'desc')
-            ->limit(6)
-            ->get()
+        // Hero backgrounds follow the same selection as the grid, skipping events without a cover
+        $heroImages = $events
             ->filter(fn (Event $event) => $event->coverImage !== null)
             ->map(fn (Event $event) => route('media.show', $event->coverImage))
             ->values()

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Event;
+use App\Models\Image;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -74,6 +75,36 @@ class HomePageTest extends TestCase
 
         $this->assertCount(6, $events);
         $this->assertFalse($events->pluck('title')->contains('Pasado'));
+    }
+
+    public function test_hero_images_follow_grid_selection_and_skip_events_without_cover(): void
+    {
+        $upcoming = $this->makeEvent('Próximo Sin Portada', now()->addDays(5));
+        $highlighted = $this->makeEvent('Pasado Destacado', now()->subDays(20), highlighted: true);
+        $recent = $this->makeEvent('Pasado Reciente', now()->subDay());
+
+        $covers = collect([$highlighted, $recent])->map(function (Event $event) {
+            $image = Image::create([
+                'event_id' => $event->id,
+                'kind' => 'cover',
+                'mime_type' => 'image/png',
+                'filename' => 'cover.png',
+                'byte_size' => 3,
+                'checksum' => md5('img'),
+                'data' => base64_encode('img'),
+            ]);
+            $event->update(['cover_image_id' => $image->id]);
+
+            return $image;
+        });
+
+        $heroImages = $this->get('/')->viewData('heroImages');
+
+        // Grid order is upcoming, highlighted past, recent past; the cover-less upcoming event is skipped
+        $this->assertSame(
+            [route('media.show', $covers[0]), route('media.show', $covers[1])],
+            $heroImages
+        );
     }
 
     public function test_home_excludes_draft_events(): void
