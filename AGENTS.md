@@ -21,8 +21,8 @@ other.
 - App `zero-productions` (zero-productions.com). **Every push to `main` auto-deploys via
   the Heroku GitHub integration and there is NO CI gate** — run the full test suite and
   Pint before every push; a broken push is live in minutes.
-- The `Procfile` has only a web dyno — **no release phase**. Migrations run manually:
-  `heroku run php artisan migrate -a zero-productions` (ask before running).
+- The `Procfile` has a `release` phase (`php artisan migrate --force`) — pending
+  migrations run automatically on every deploy.
 - PostgreSQL in production, SQLite locally — write migrations that work on both (one
   existing migration is pgsql-only and guarded; follow that pattern if unavoidable).
 - **Images live in the database** (`images.data`, base64 text) because the Heroku
