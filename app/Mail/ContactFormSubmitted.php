@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\ContactMessage;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -27,7 +26,7 @@ class ContactFormSubmitted extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Nuevo mensaje de contacto - ' . $this->contactMessage->name,
+            subject: 'Nuevo mensaje de contacto - '.$this->contactMessage->name,
             replyTo: [$this->contactMessage->email],
         );
     }

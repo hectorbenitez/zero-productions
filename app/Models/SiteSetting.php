@@ -38,7 +38,7 @@ class SiteSetting extends Model
      */
     public function hasInstagram(): bool
     {
-        return !empty($this->instagram_url);
+        return ! empty($this->instagram_url);
     }
 
     /**
@@ -46,7 +46,7 @@ class SiteSetting extends Model
      */
     public function hasFacebook(): bool
     {
-        return !empty($this->facebook_url);
+        return ! empty($this->facebook_url);
     }
 
     /**
@@ -54,7 +54,7 @@ class SiteSetting extends Model
      */
     public function hasYoutube(): bool
     {
-        return !empty($this->youtube_url);
+        return ! empty($this->youtube_url);
     }
 
     /**
@@ -62,7 +62,7 @@ class SiteSetting extends Model
      */
     public function hasWhatsapp(): bool
     {
-        return !empty($this->whatsapp);
+        return ! empty($this->whatsapp);
     }
 
     /**
@@ -70,12 +70,13 @@ class SiteSetting extends Model
      */
     public function getWhatsappUrlAttribute(): ?string
     {
-        if (!$this->hasWhatsapp()) {
+        if (! $this->hasWhatsapp()) {
             return null;
         }
 
         // Clean the phone number
         $phone = preg_replace('/[^0-9]/', '', $this->whatsapp);
+
         return "https://wa.me/{$phone}";
     }
 

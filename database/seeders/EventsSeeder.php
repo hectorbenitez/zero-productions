@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Event;
 use App\Models\EventLink;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class EventsSeeder extends Seeder
 {

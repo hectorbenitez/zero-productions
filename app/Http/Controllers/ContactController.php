@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactFormSubmitted;
 use App\Models\ContactMessage;
 use App\Models\SiteSetting;
-use App\Mail\ContactFormSubmitted;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -34,6 +34,7 @@ class ContactController extends Controller
         // Anti-spam: honeypot check (bots fill hidden fields)
         if ($request->filled('website')) {
             Log::warning('Spam blocked (honeypot)', ['ip' => $request->ip()]);
+
             return redirect()->route('contact.show')
                 ->with('success', '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
         }
@@ -42,6 +43,7 @@ class ContactController extends Controller
         $loadedAt = (int) $request->input('_form_loaded_at', 0);
         if ($loadedAt > 0 && (now()->timestamp - $loadedAt) < 3) {
             Log::warning('Spam blocked (too fast)', ['ip' => $request->ip(), 'seconds' => now()->timestamp - $loadedAt]);
+
             return redirect()->route('contact.show')
                 ->withErrors(['spam' => 'El formulario se envió demasiado rápido. Por favor, inténtalo de nuevo.'])
                 ->withInput();
@@ -73,12 +75,12 @@ class ContactController extends Controller
 
         // Send email notification
         $settings = SiteSetting::instance();
-        
+
         try {
             Mail::to($settings->contact_email)->send(new ContactFormSubmitted($contactMessage));
         } catch (\Exception $e) {
             // Log the error but don't fail the request
-            Log::error('Failed to send contact email: ' . $e->getMessage());
+            Log::error('Failed to send contact email: '.$e->getMessage());
         }
 
         return redirect()
@@ -110,7 +112,7 @@ class ContactController extends Controller
 
             return false;
         } catch (\Exception $e) {
-            Log::error('Turnstile verification unavailable: ' . $e->getMessage());
+            Log::error('Turnstile verification unavailable: '.$e->getMessage());
 
             return true;
         }

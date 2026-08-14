@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Trust all proxies (required for Heroku)
         $middleware->trustProxies(at: '*');
-        
+
         // Redirect authenticated users to admin dashboard (instead of home)
         $middleware->redirectGuestsTo('/login');
         $middleware->redirectUsersTo('/admin');

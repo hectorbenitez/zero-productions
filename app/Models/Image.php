@@ -120,6 +120,6 @@ class Image extends Model
             $unitIndex++;
         }
 
-        return round($bytes, 2) . ' ' . $units[$unitIndex];
+        return round($bytes, 2).' '.$units[$unitIndex];
     }
 }

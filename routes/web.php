@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\MediaController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\EventLinkController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
