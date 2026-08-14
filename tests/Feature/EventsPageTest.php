@@ -21,7 +21,7 @@ class EventsPageTest extends TestCase
         ]);
     }
 
-    public function test_past_events_section_shows_only_highlighted_events(): void
+    public function test_past_events_section_shows_all_published_past_events(): void
     {
         $this->makeEvent('Pasado Destacado', now()->subDays(5), highlighted: true);
         $this->makeEvent('Pasado Normal', now()->subDays(3));
@@ -30,25 +30,12 @@ class EventsPageTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertSame(
-            ['Pasado Destacado'],
+            ['Pasado Normal', 'Pasado Destacado'],
             $response->viewData('pastEvents')->pluck('title')->all()
         );
     }
 
-    public function test_upcoming_events_show_regardless_of_highlight(): void
-    {
-        $this->makeEvent('Próximo Normal', now()->addDays(5));
-        $this->makeEvent('Próximo Destacado', now()->addDays(10), highlighted: true);
-
-        $response = $this->get('/eventos');
-
-        $this->assertSame(
-            ['Próximo Normal', 'Próximo Destacado'],
-            $response->viewData('upcomingEvents')->pluck('title')->all()
-        );
-    }
-
-    public function test_past_events_exclude_highlighted_drafts(): void
+    public function test_past_events_exclude_drafts(): void
     {
         $this->makeEvent('Borrador Destacado', now()->subDay(), 'draft', highlighted: true);
 

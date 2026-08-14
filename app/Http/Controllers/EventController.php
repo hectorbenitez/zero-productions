@@ -22,7 +22,6 @@ class EventController extends Controller
 
         $pastEvents = Event::published()
             ->past()
-            ->highlighted()
             ->orderBy('event_datetime', 'desc')
             ->get();
 

@@ -15,7 +15,7 @@ class HomeController extends Controller
     {
         $settings = SiteSetting::instance();
 
-        // Always fill the grid with 6 events: upcoming first, then the most recent past ones
+        // Always fill the grid with 6 events: upcoming first, then past ones (highlighted before most recent)
         $events = Event::published()
             ->upcoming()
             ->with('coverImage')
@@ -29,6 +29,7 @@ class HomeController extends Controller
                 Event::published()
                     ->past()
                     ->with('coverImage')
+                    ->orderByDesc('is_highlighted')
                     ->orderBy('event_datetime', 'desc')
                     ->limit($remaining)
                     ->get()
