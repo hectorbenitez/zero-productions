@@ -12,11 +12,9 @@ class MediaController extends Controller
      */
     public function show(Image $image): Response
     {
-        // Reload the image with the binary data column included
-        $image = Image::withData()->findOrFail($image->id);
-
-        // Decode from base64 storage
-        $data = base64_decode($image->data);
+        // Object storage, or the legacy base64 column for rows not copied yet
+        $data = $image->contents();
+        abort_if($data === null, 404);
 
         // Create response with proper headers
         $response = response($data);
