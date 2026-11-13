@@ -21,25 +21,12 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
     <link rel="manifest" href="{{ asset('site.webmanifest') }}">
-    <meta name="theme-color" content="#000000">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700|bebas-neue:400" rel="stylesheet" />
+    <meta name="theme-color" content="#0a0a0a">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <style>
-        :root {
-            --color-primary: #3b82f6;
-            --color-primary-dark: #2563eb;
-            --color-dark: #0f0f0f;
-            --color-darker: #050505;
-        }
-    </style>
 </head>
-<body class="font-sans antialiased bg-neutral-950 text-white min-h-screen flex flex-col">
+<body class="font-sans antialiased bg-void text-bone min-h-screen flex flex-col selection:bg-riff selection:text-on-riff">
     @include('partials.navbar')
 
     <main class="flex-grow">

@@ -4,57 +4,62 @@
 @section('description', 'Descubre todos nuestros eventos, conciertos y espectáculos. Próximos eventos y eventos pasados.')
 
 @section('content')
-    <!-- Header -->
-    <section class="py-16 bg-gradient-to-b from-neutral-900 to-neutral-950">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="font-display text-4xl sm:text-5xl text-white tracking-wide mb-4">Eventos</h1>
-            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
-                Descubre todos nuestros eventos, conciertos y espectáculos
+    <div class="zp-wrap">
+        <!-- Header -->
+        <section class="pt-14 pb-10 sm:pt-[72px] sm:pb-12 border-b-2 border-rule">
+            <span class="rf-label">Agenda</span>
+            <h1 class="font-display font-black uppercase text-[76px] sm:text-[144px] leading-[.84] mt-3 mb-4">Eventos</h1>
+            <p class="text-[17px] leading-[26px] sm:text-xl sm:leading-[30px] text-ash">
+                Descubre todos nuestros eventos, conciertos y espectáculos.
             </p>
-        </div>
-    </section>
+        </section>
 
-    <!-- Upcoming Events -->
-    <section class="py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="w-1 h-8 bg-blue-500 rounded-full"></div>
-                <h2 class="font-display text-2xl sm:text-3xl text-white tracking-wide">Próximos Eventos</h2>
+        <!-- Upcoming Events -->
+        <section class="pt-14 sm:pt-16">
+            <div class="zp-sec-h">
+                <div>
+                    <span class="rf-label">Lo que viene</span>
+                    <h2>Próximos eventos</h2>
+                </div>
+                @if($upcomingEvents->count() > 0)
+                    <span class="font-mono text-xs text-smoke">{{ str_pad($upcomingEvents->count(), 2, '0', STR_PAD_LEFT) }} {{ $upcomingEvents->count() === 1 ? 'evento' : 'eventos' }}</span>
+                @endif
             </div>
 
             @if($upcomingEvents->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 pt-4">
                     @foreach($upcomingEvents as $event)
                         @include('components.event-card', ['event' => $event])
                     @endforeach
                 </div>
             @else
-                <div class="text-center py-12 bg-neutral-900/50 rounded-xl border border-white/5">
-                    <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                    <p class="text-gray-400 text-lg">No hay eventos próximos programados</p>
-                    <p class="text-gray-500 mt-2">Vuelve pronto para ver nuevos eventos</p>
+                <div class="flex flex-col items-center text-center py-12 px-6 bg-cab border border-dashed border-rule-strong">
+                    <x-rock-icon name="date" size="48" class="text-ash mb-4" />
+                    <p class="text-bone text-lg font-semibold">No hay eventos próximos programados</p>
+                    <p class="text-ash mt-2">Vuelve pronto para ver nuevos eventos.</p>
                 </div>
             @endif
-        </div>
-    </section>
+        </section>
 
-    <!-- Past Events -->
-    @if($pastEvents->count() > 0)
-        <section class="py-16 bg-neutral-900/30">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center gap-3 mb-8">
-                    <div class="w-1 h-8 bg-gray-500 rounded-full"></div>
-                    <h2 class="font-display text-2xl sm:text-3xl text-white tracking-wide">Eventos Pasados</h2>
+        <!-- Past Events -->
+        @if($pastEvents->count() > 0)
+            <section class="pt-16 sm:pt-24">
+                <div class="zp-sec-h">
+                    <div>
+                        <span class="rf-label">Archivo</span>
+                        <h2>Eventos pasados</h2>
+                    </div>
+                    <span class="font-mono text-xs text-smoke">{{ str_pad($pastEvents->count(), 2, '0', STR_PAD_LEFT) }} {{ $pastEvents->count() === 1 ? 'evento' : 'eventos' }}</span>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 pt-4">
                     @foreach($pastEvents as $event)
                         @include('components.event-card', ['event' => $event])
                     @endforeach
                 </div>
-            </div>
-        </section>
-    @endif
+            </section>
+        @endif
+    </div>
+
+    <div class="h-20 sm:h-24"></div>
 @endsection

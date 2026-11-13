@@ -1,3 +1,158 @@
+/* ZeroPass Riff fonts, self-hosted through Vite */
+@import '@fontsource/big-shoulders-display/700';
+@import '@fontsource/big-shoulders-display/800';
+@import '@fontsource/big-shoulders-display/900';
+@import '@fontsource/archivo/400';
+@import '@fontsource/archivo/500';
+@import '@fontsource/archivo/600';
+@import '@fontsource/archivo/700';
+@import '@fontsource/archivo/800';
+@import '@fontsource/space-mono/400';
+@import '@fontsource/space-mono/700';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+ * ZeroPass Riff components, ported from koden-zero-design-system/system/components/bundle.css
+ * (synced commit in resources/css/riff-sync.json). Keep the rf-* declarations identical to the
+ * source; zp-* classes below are this site's page layout built from the same tokens.
+ */
+@layer components {
+    .rf-label { font: 700 11px/16px theme('fontFamily.sans'); letter-spacing: .16em; text-transform: uppercase; color: theme('colors.ash'); }
+    .rf-display { font-family: theme('fontFamily.display'); text-transform: uppercase; }
+    :where(.rf-btn, .rf-input, .rf-select, .rf-card):focus-visible { outline: 2px solid theme('colors.focus'); outline-offset: 2px; }
+
+    /* Icon */
+    .rf-icon { width: 24px; height: 24px; flex-shrink: 0; display: inline-block; vertical-align: middle; }
+
+    /* Button */
+    .rf-btn { appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        font: 800 14px/20px theme('fontFamily.sans'); letter-spacing: .08em; text-transform: uppercase; text-decoration: none;
+        padding: 12px 24px; border: 2px solid transparent; border-radius: 0;
+        cursor: pointer; transition: transform 120ms, box-shadow 120ms, background-color 120ms, border-color 120ms, color 120ms; }
+    .rf-btn .rf-icon { width: 18px; height: 18px; }
+    .rf-btn-lg { padding: 16px 32px; font-size: 16px; }
+    .rf-btn-block { width: 100%; }
+    .rf-btn-primary { background: theme('colors.riff'); color: theme('colors.on-riff'); }
+    .rf-btn-primary:hover { transform: translate(-3px, -3px); box-shadow: theme('boxShadow.poster'); }
+    .rf-btn-primary:active { transform: none; box-shadow: none; background: theme('colors.riff-deep'); }
+    .rf-btn-secondary { background: transparent; color: theme('colors.bone'); border-color: theme('colors.bone'); }
+    .rf-btn-secondary:hover { background: theme('colors.bone'); color: theme('colors.void'); }
+    .rf-btn-ghost { background: transparent; color: theme('colors.ash'); padding-left: 0; padding-right: 0; }
+    .rf-btn-ghost:hover { color: theme('colors.bone'); }
+    .rf-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* InfoChip */
+    .rf-chip { display: inline-flex; align-items: center; gap: 12px; background: theme('colors.cab'); padding: 10px 16px;
+        border: 1px solid theme('colors.rule'); border-left: 4px solid theme('colors.riff'); color: theme('colors.bone'); text-decoration: none; }
+    a.rf-chip:hover { border-color: theme('colors.rule-strong'); border-left-color: theme('colors.riff'); background: theme('colors.steel'); }
+    .rf-chip .rf-icon { color: theme('colors.bone'); }
+    .rf-chip-value { display: block; font: 600 15px/22px theme('fontFamily.sans'); color: theme('colors.bone'); }
+
+    /* DateTag */
+    .rf-date { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; min-width: 64px;
+        padding: 8px 10px 6px; background: theme('colors.riff'); color: theme('colors.on-riff'); transform: rotate(-3deg); }
+    .rf-date-day { font: 900 40px/.85 theme('fontFamily.display'); letter-spacing: -.02em; }
+    .rf-date-month { font: 800 13px/16px theme('fontFamily.display'); letter-spacing: .18em; text-transform: uppercase; margin-top: 4px; }
+
+    /* Stamp */
+    .rf-stamp { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 2px;
+        font: 900 14px/18px theme('fontFamily.display'); letter-spacing: .14em; text-transform: uppercase; transform: rotate(var(--rf-tilt, -4deg));
+        border: 2px solid currentColor; box-shadow: inset 0 0 0 2px theme('colors.void'), inset 0 0 0 3px currentColor; }
+    .rf-stamp-riff { color: theme('colors.riff-text'); }
+    .rf-stamp-volt { color: theme('colors.on-volt'); background: theme('colors.volt'); box-shadow: none; border-color: theme('colors.on-volt'); }
+    .rf-stamp-ok { color: theme('colors.ok'); }
+    .rf-stamp-bone { color: theme('colors.bone'); }
+    .rf-stamp .rf-icon { width: 14px; height: 14px; }
+
+    /* EventCard */
+    .rf-card { display: block; position: relative; background: theme('colors.amp'); border: 1px solid theme('colors.rule'); color: theme('colors.bone');
+        text-decoration: none; transition: transform 160ms, box-shadow 160ms, border-color 160ms; }
+    .rf-card:hover { transform: translate(-4px, -4px); box-shadow: theme('boxShadow.poster'); border-color: theme('colors.rule-strong'); }
+    .rf-card-media { position: relative; aspect-ratio: 4/3; background: theme('colors.cab'); overflow: hidden; }
+    .rf-card-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 400ms; }
+    .rf-card:hover .rf-card-media img { transform: scale(1.04); }
+    .rf-card-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, theme('colors.amp'), transparent 55%); }
+    .rf-card-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .rf-card-placeholder img { width: 72px; height: 72px; opacity: .18; object-fit: contain; }
+    .rf-card:hover .rf-card-placeholder img { transform: none; }
+    .rf-card-body { position: relative; padding: 24px; }
+    .rf-card .rf-date { position: absolute; top: -40px; right: 24px; z-index: 1; }
+    .rf-card-title { font: 800 24px/1.05 theme('fontFamily.display'); letter-spacing: .01em; margin: 0 72px 12px 0; text-transform: uppercase; }
+    .rf-card-meta { display: flex; align-items: center; gap: 8px; font: 400 13px/20px theme('fontFamily.sans'); color: theme('colors.ash'); margin: 0 0 6px; }
+    .rf-card-meta .rf-icon { width: 16px; height: 16px; }
+    .rf-card-cta { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; padding-top: 16px;
+        border-top: 1px solid theme('colors.rule'); font: 800 13px/20px theme('fontFamily.sans'); letter-spacing: .08em; text-transform: uppercase; }
+    .rf-card-cta .rf-icon { width: 18px; height: 18px; color: theme('colors.riff-text'); transition: transform 160ms; }
+    .rf-card:hover .rf-card-cta .rf-icon { transform: translateX(4px); }
+    .rf-card-status { position: absolute; top: 16px; left: 16px; z-index: 1; }
+
+    /* Field: label + input/textarea + hint/error */
+    .rf-field { display: flex; flex-direction: column; gap: 6px; }
+    .rf-input { appearance: none; font: 400 15px/24px theme('fontFamily.sans'); color: theme('colors.bone'); background: theme('colors.cab');
+        border: 2px solid theme('colors.rule-strong'); border-radius: 0; padding: 10px 16px; width: 100%; }
+    .rf-input::placeholder { color: theme('colors.smoke'); }
+    .rf-input:hover { border-color: theme('colors.ash'); }
+    .rf-input:focus { border-color: theme('colors.bone'); box-shadow: none; outline: 2px solid theme('colors.focus'); outline-offset: 2px; }
+    textarea.rf-input { min-height: 160px; resize: vertical; }
+    .rf-hint { font: 400 13px/20px theme('fontFamily.sans'); color: theme('colors.smoke'); }
+    .rf-field.is-error .rf-input { border-color: theme('colors.danger'); }
+    .rf-error { display: flex; align-items: center; gap: 6px; font: 600 13px/20px theme('fontFamily.sans'); color: theme('colors.danger'); }
+    .rf-error .rf-icon { width: 16px; height: 16px; }
+
+    /* SiteHeader nav */
+    .rf-nav { display: flex; align-items: center; gap: 28px; }
+    .rf-nav a:not(.rf-btn) { font: 700 13px/20px theme('fontFamily.sans'); letter-spacing: .12em; text-transform: uppercase; color: theme('colors.ash');
+        text-decoration: none; padding: 24px 0 21px; border-bottom: 3px solid transparent; }
+    .rf-nav a:not(.rf-btn):hover { color: theme('colors.bone'); }
+    .rf-nav a.is-active { color: theme('colors.bone'); border-bottom-color: theme('colors.riff'); }
+
+    /* StatCard */
+    .rf-stat { background: theme('colors.amp'); border: 1px solid theme('colors.rule'); padding: 16px; }
+    .rf-stat-value { font: 900 32px/1.1 theme('fontFamily.display'); margin-top: 4px; }
+    .rf-stat-sub { font: 400 12px/16px theme('fontFamily.mono'); color: theme('colors.smoke'); margin-top: 4px; }
+
+    /* ---- zp-* page layout (this site only) ---- */
+    .zp-wrap { max-width: 1280px; margin: 0 auto; padding: 0 16px; }
+    @screen sm { .zp-wrap { padding: 0 32px; } }
+
+    /* Section heading: eyebrow + big head + rule underneath */
+    .zp-sec-h { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 40px;
+        border-bottom: 2px solid theme('colors.rule'); padding-bottom: 20px; }
+    @screen sm { .zp-sec-h { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 24px; } }
+    .zp-sec-h h2 { font: 900 52px/.9 theme('fontFamily.display'); text-transform: uppercase; margin-top: 8px; }
+    @screen sm { .zp-sec-h h2 { font-size: 72px; } }
+    .zp-sec-h p { color: theme('colors.ash'); font: 400 15px/24px theme('fontFamily.sans'); margin-top: 8px; }
+
+    /* Full-bleed photo hero with the fade into void */
+    .zp-hero::after { content: ''; position: absolute; inset: 0;
+        background: linear-gradient(to top, theme('colors.void') 0%, rgba(10, 10, 10, .55) 45%, rgba(10, 10, 10, .2) 100%); }
+    .zp-ev-hero::after { content: ''; position: absolute; inset: 0;
+        background: linear-gradient(to top, theme('colors.void') 2%, rgba(10, 10, 10, .45) 55%, rgba(10, 10, 10, .1)); }
+
+    /* Red band-name strip under the hero (static, never loops) */
+    .zp-lineup { background: theme('colors.riff'); color: theme('colors.on-riff'); overflow: hidden; white-space: nowrap;
+        border-top: 2px solid theme('colors.void'); border-bottom: 2px solid theme('colors.void'); }
+    .zp-lineup-in { display: flex; gap: 18px; align-items: center; padding: 12px 16px;
+        font: 900 22px/1 theme('fontFamily.display'); text-transform: uppercase; letter-spacing: .02em; }
+    @screen sm { .zp-lineup-in { gap: 28px; padding: 14px 32px; font-size: 30px; } }
+    .zp-lineup .rf-icon { width: 20px; height: 20px; color: theme('colors.on-riff'); }
+
+    /* Flyer: bone frame, hard red offset, slight tilt */
+    .zp-flyer { display: block; border: 2px solid theme('colors.bone'); box-shadow: 10px 10px 0 0 theme('colors.riff');
+        transform: rotate(1.5deg); background: theme('colors.amp'); transition: transform 160ms; }
+    .zp-flyer:hover { transform: rotate(0deg); }
+    .zp-flyer img { display: block; width: 100%; }
+
+    /* Ink button on the red CTA band (the band itself is the one red fill) */
+    .zp-btn-ink { background: theme('colors.void'); color: theme('colors.bone'); }
+    .zp-btn-ink:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 0 theme('colors.riff-deep'); }
+
+    /* Square social buttons in the footer */
+    .zp-soc { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+        border: 2px solid theme('colors.rule-strong'); color: theme('colors.bone'); transition: border-color 120ms; }
+    .zp-soc:hover { border-color: theme('colors.bone'); }
+    .zp-soc:focus-visible { outline: 2px solid theme('colors.focus'); outline-offset: 2px; }
+}

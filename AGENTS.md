@@ -15,6 +15,11 @@ other.
   enough proof, or to reproduce a reported bug.
 - **`laravel-best-practices`** (mirrored in `.agents/skills/`) — generic backend rule set;
   project conventions here override it.
+- **`riff-design-sync`** (mirrored in `.agents/skills/`) — the shared ZeroPass Riff design
+  system (`hectorbenitez/koden-zero-design-system`), ported here and in the zeropass repo.
+  Use before restyling public pages or to sync after the system changes; new tokens or
+  components go into the design-system repo first, never only here.
+  `resources/css/riff-sync.json` records the last synced commit. Identical in both repos.
 
 ## Deployment — Heroku, auto-deploy, no CI gate
 
