@@ -251,4 +251,7 @@
         background: transparent; border: 2px solid theme('colors.bone'); border-radius: 0; padding: 7px 14px; margin-right: 12px;
         cursor: pointer; transition: background-color 120ms, color 120ms; }
     .rf-input[type=file]::file-selector-button:hover { background: theme('colors.bone'); color: theme('colors.void'); }
+
+    /* Drag-and-drop reordering (resources/js/sortable.js) */
+    [data-sortable-item].is-dragging { opacity: .45; }
 }

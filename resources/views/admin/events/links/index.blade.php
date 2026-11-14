@@ -57,12 +57,13 @@
             @if($event->links->count() > 0)
                 <form action="{{ route('admin.events.links.reorder', $event) }}" method="POST" id="reorder-form">
                     @csrf
-                    <ul class="space-y-3" id="links-list">
+                    <ul class="space-y-3" id="links-list" data-sortable>
                         @foreach($event->links as $link)
-                            <li class="flex items-center gap-4 p-4 bg-cab border border-rule border-l-4 border-l-riff" data-id="{{ $link->id }}">
+                            <li class="flex items-center gap-4 p-4 bg-cab border border-rule border-l-4 border-l-riff" data-id="{{ $link->id }}" data-sortable-item>
                                 <input type="hidden" name="order[]" value="{{ $link->id }}">
 
-                                <button type="button" class="cursor-move text-smoke hover:text-bone" aria-label="Mover">
+                                <button type="button" class="rf-iconbtn cursor-move" data-sortable-handle
+                                        title="Arrastra o usa las flechas para mover" aria-label="Mover {{ $link->label }}">
                                     <x-rock-icon name="drag" />
                                 </button>
 
@@ -79,28 +80,35 @@
                                             class="rf-iconbtn" title="Editar" aria-label="Editar">
                                         <x-rock-icon name="edit" />
                                     </button>
-                                    <form action="{{ route('admin.events.links.destroy', [$event, $link]) }}"
-                                          method="POST"
-                                          onsubmit="return confirm('¿Eliminar este enlace?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="rf-iconbtn rf-iconbtn-danger" title="Eliminar" aria-label="Eliminar">
-                                            <x-rock-icon name="trash" />
-                                        </button>
-                                    </form>
+                                    {{-- Submits its own form below; forms can't nest inside the reorder form --}}
+                                    <button type="submit" form="delete-link-{{ $link->id }}" class="rf-iconbtn rf-iconbtn-danger" title="Eliminar" aria-label="Eliminar">
+                                        <x-rock-icon name="trash" />
+                                    </button>
                                 </div>
                             </li>
                         @endforeach
                     </ul>
 
                     @if($event->links->count() > 1)
-                        <div class="mt-4 text-right">
+                        <div class="mt-4 flex flex-wrap items-center justify-end gap-4">
+                            <p class="rf-hint">Arrastra los enlaces o usa las flechas sobre <x-rock-icon name="drag" :size="16" /> para cambiar el orden.</p>
                             <button type="submit" class="rf-btn rf-btn-secondary">
                                 Guardar orden
                             </button>
                         </div>
                     @endif
                 </form>
+
+                @foreach($event->links as $link)
+                    <form id="delete-link-{{ $link->id }}"
+                          action="{{ route('admin.events.links.destroy', [$event, $link]) }}"
+                          method="POST"
+                          class="hidden"
+                          onsubmit="return confirm('¿Eliminar este enlace?')">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                @endforeach
             @else
                 <p class="text-smoke text-center py-8">No hay enlaces configurados</p>
             @endif

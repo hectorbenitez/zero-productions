@@ -1,4 +1,5 @@
 import './bootstrap';
+import './sortable';
 
 import Alpine from 'alpinejs';
 import lightbox from './lightbox';

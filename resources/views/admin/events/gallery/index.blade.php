@@ -49,9 +49,9 @@
             @if($event->galleryImages->count() > 0)
                 <form action="{{ route('admin.events.gallery.reorder', $event) }}" method="POST" id="reorder-form">
                     @csrf
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="gallery-grid">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="gallery-grid" data-sortable>
                         @foreach($event->galleryImages as $image)
-                            <div class="relative group" data-id="{{ $image->id }}">
+                            <div class="relative group" data-id="{{ $image->id }}" data-sortable-item>
                                 <input type="hidden" name="order[]" value="{{ $image->id }}">
 
                                 <div class="aspect-square bg-cab border border-rule overflow-hidden">
@@ -62,6 +62,10 @@
 
                                 <!-- Overlay Actions -->
                                 <div class="absolute inset-0 bg-void/70 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                    <button type="button" class="rf-iconbtn rf-iconbtn-solid cursor-move" data-sortable-handle
+                                            title="Arrastra o usa las flechas para mover" aria-label="Mover imagen">
+                                        <x-rock-icon name="drag" />
+                                    </button>
                                     <button type="button"
                                             onclick="editCaption({{ $image->id }}, '{{ addslashes($image->caption ?? '') }}')"
                                             class="rf-iconbtn rf-iconbtn-solid" title="Editar descripción" aria-label="Editar descripción">
@@ -72,17 +76,10 @@
                                     </a>
                                 </div>
 
-                                <!-- Delete Button -->
-                                <form action="{{ route('admin.events.gallery.destroy', [$event, $image]) }}"
-                                      method="POST"
-                                      class="absolute -top-2 -right-2"
-                                      onsubmit="return confirm('¿Eliminar esta imagen?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="rf-iconbtn rf-iconbtn-solid rf-iconbtn-danger rf-iconbtn-sm opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity" title="Eliminar" aria-label="Eliminar imagen">
-                                        <x-rock-icon name="close" />
-                                    </button>
-                                </form>
+                                <!-- Delete Button: submits its own form below; forms can't nest inside the reorder form -->
+                                <button type="submit" form="delete-image-{{ $image->id }}" class="absolute -top-2 -right-2 rf-iconbtn rf-iconbtn-solid rf-iconbtn-danger rf-iconbtn-sm opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity" title="Eliminar" aria-label="Eliminar imagen">
+                                    <x-rock-icon name="close" />
+                                </button>
 
                                 @if($image->caption)
                                     <p class="mt-2 rf-code truncate">{{ $image->caption }}</p>
@@ -92,13 +89,25 @@
                     </div>
 
                     @if($event->galleryImages->count() > 1)
-                        <div class="mt-6 text-right">
+                        <div class="mt-6 flex flex-wrap items-center justify-end gap-4">
+                            <p class="rf-hint">Arrastra las imágenes o usa las flechas sobre <x-rock-icon name="drag" :size="16" /> para cambiar el orden.</p>
                             <button type="submit" class="rf-btn rf-btn-secondary">
                                 Guardar orden
                             </button>
                         </div>
                     @endif
                 </form>
+
+                @foreach($event->galleryImages as $image)
+                    <form id="delete-image-{{ $image->id }}"
+                          action="{{ route('admin.events.gallery.destroy', [$event, $image]) }}"
+                          method="POST"
+                          class="hidden"
+                          onsubmit="return confirm('¿Eliminar esta imagen?')">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                @endforeach
             @else
                 <div class="text-center py-12">
                     <x-rock-icon name="image" :size="48" class="text-smoke mx-auto mb-4" />
