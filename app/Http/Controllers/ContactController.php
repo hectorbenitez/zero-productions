@@ -85,7 +85,8 @@ class ContactController extends Controller
 
         return redirect()
             ->route('contact.show')
-            ->with('success', '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.');
+            ->with('success', '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.')
+            ->with('analytics_event', 'generate_lead');
     }
 
     /**
