@@ -4,205 +4,192 @@
 
 @section('content')
     <div class="mb-6">
-        <a href="{{ route('admin.events.index') }}" class="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-            Volver a Eventos
+        <x-rf-button :href="route('admin.events.index')" variant="ghost" icon="arrow-left">Volver a Eventos</x-rf-button>
+    </div>
+
+    <div class="rf-page-h">
+        <div class="min-w-0">
+            <span class="rf-label">Editar evento · <span class="rf-code">ID {{ $event->id }}</span></span>
+            <h1 class="break-words">{{ $event->title }}</h1>
+        </div>
+        <a href="{{ route('events.show', $event) }}" target="_blank" class="rf-link shrink-0">
+            Ver en el sitio <x-rock-icon name="arrow-right" />
         </a>
     </div>
 
     <!-- Event Form -->
-    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
-        <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-            <h1 class="text-xl font-bold text-gray-900">Editar Evento <span class="text-sm font-normal text-gray-400">(ID: {{ $event->id }})</span></h1>
-            <a href="{{ route('events.show', $event) }}" target="_blank" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                Ver en el sitio →
-            </a>
-        </div>
-
-        <form action="{{ route('admin.events.update', $event) }}" method="POST" enctype="multipart/form-data" class="p-6">
+    <div class="rf-panel mb-6">
+        <form action="{{ route('admin.events.update', $event) }}" method="POST" enctype="multipart/form-data" class="rf-panel-b">
             @csrf
             @method('PUT')
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
                 <!-- Left Column -->
                 <div class="space-y-6">
-                    <div>
-                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Título *</label>
-                        <input type="text" 
-                               name="title" 
-                               id="title" 
+                    <div @class(['rf-field', 'is-error' => $errors->has('title')])>
+                        <label for="title" class="rf-label">Título *</label>
+                        <input type="text"
+                               name="title"
+                               id="title"
                                value="{{ old('title', $event->title) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('title') border-red-500 @enderror"
+                               class="rf-input"
                                required>
                         @error('title')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="rf-error"><x-rock-icon name="alert" />{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="slug" class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-                        <input type="text" 
-                               name="slug" 
-                               id="slug" 
+                    <div @class(['rf-field', 'is-error' => $errors->has('slug')])>
+                        <label for="slug" class="rf-label">Slug</label>
+                        <input type="text"
+                               name="slug"
+                               id="slug"
                                value="{{ old('slug', $event->slug) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('slug') border-red-500 @enderror">
+                               class="rf-input font-mono">
                         @error('slug')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="rf-error"><x-rock-icon name="alert" />{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-                        <textarea name="description" 
-                                  id="description" 
+                    <div @class(['rf-field', 'is-error' => $errors->has('description')])>
+                        <label for="description" class="rf-label">Descripción</label>
+                        <textarea name="description"
+                                  id="description"
                                   rows="5"
-                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none @error('description') border-red-500 @enderror">{{ old('description', $event->description) }}</textarea>
+                                  class="rf-input">{{ old('description', $event->description) }}</textarea>
                         @error('description')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="rf-error"><x-rock-icon name="alert" />{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="venue" class="block text-sm font-medium text-gray-700 mb-1">Lugar</label>
-                            <input type="text" 
-                                   name="venue" 
-                                   id="venue" 
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="rf-field">
+                            <label for="venue" class="rf-label">Lugar</label>
+                            <input type="text"
+                                   name="venue"
+                                   id="venue"
                                    value="{{ old('venue', $event->venue) }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                   class="rf-input">
                         </div>
-                        <div>
-                            <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Ciudad</label>
-                            <input type="text" 
-                                   name="city" 
-                                   id="city" 
+                        <div class="rf-field">
+                            <label for="city" class="rf-label">Ciudad</label>
+                            <input type="text"
+                                   name="city"
+                                   id="city"
                                    value="{{ old('city', $event->city) }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                   class="rf-input">
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Column -->
                 <div class="space-y-6">
-                    <div>
-                        <label for="event_datetime" class="block text-sm font-medium text-gray-700 mb-1">Fecha y Hora *</label>
-                        <input type="datetime-local" 
-                               name="event_datetime" 
-                               id="event_datetime" 
+                    <div @class(['rf-field', 'is-error' => $errors->has('event_datetime')])>
+                        <label for="event_datetime" class="rf-label">Fecha y Hora *</label>
+                        <input type="datetime-local"
+                               name="event_datetime"
+                               id="event_datetime"
                                value="{{ old('event_datetime', $event->event_datetime->format('Y-m-d\TH:i')) }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('event_datetime') border-red-500 @enderror"
+                               class="rf-input [color-scheme:dark]"
                                required>
                         @error('event_datetime')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="rf-error"><x-rock-icon name="alert" />{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Estado *</label>
-                        <select name="status" 
-                                id="status" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('status') border-red-500 @enderror">
+                    <div @class(['rf-field', 'is-error' => $errors->has('status')])>
+                        <label for="status" class="rf-label">Estado *</label>
+                        <select name="status"
+                                id="status"
+                                class="rf-select">
                             <option value="draft" {{ old('status', $event->status) === 'draft' ? 'selected' : '' }}>Borrador</option>
                             <option value="published" {{ old('status', $event->status) === 'published' ? 'selected' : '' }}>Publicado</option>
                         </select>
                         @error('status')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="rf-error"><x-rock-icon name="alert" />{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="is_highlighted" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer">
+                    <div class="rf-field">
+                        <label for="is_highlighted" class="rf-choice">
                             <input type="checkbox"
                                    name="is_highlighted"
                                    id="is_highlighted"
                                    value="1"
-                                   {{ old('is_highlighted', $event->is_highlighted) ? 'checked' : '' }}
-                                   class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                   {{ old('is_highlighted', $event->is_highlighted) ? 'checked' : '' }}>
                             Evento destacado
                         </label>
-                        <p class="mt-1 text-sm text-gray-500">Los eventos pasados destacados tienen prioridad en la portada de inicio.</p>
+                        <p class="rf-hint">Los eventos pasados destacados tienen prioridad en la portada de inicio.</p>
                     </div>
 
                     <!-- Current Cover Image -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Imagen de Portada</label>
+                    <div @class(['rf-field', 'is-error' => $errors->has('cover_image')])>
+                        <label for="cover_image" class="rf-label">Imagen de Portada</label>
                         @if($event->coverImage)
-                            <div class="mb-4">
-                                <div class="relative inline-block">
-                                    <img src="{{ route('media.show', $event->coverImage) }}" 
-                                         alt="Portada actual" 
-                                         class="w-48 h-32 object-cover rounded-lg">
-                                    <button type="button" 
-                                            onclick="document.getElementById('delete-cover-form').submit()"
-                                            class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                        </svg>
-                                    </button>
-                                </div>
+                            <div class="relative inline-block self-start mb-2">
+                                <img src="{{ route('media.show', $event->coverImage) }}"
+                                     alt="Portada actual"
+                                     class="w-48 h-32 object-cover border border-rule">
+                                <button type="button"
+                                        onclick="document.getElementById('delete-cover-form').submit()"
+                                        class="rf-iconbtn rf-iconbtn-solid rf-iconbtn-danger absolute -top-3 -right-3 rf-iconbtn-sm"
+                                        title="Eliminar portada" aria-label="Eliminar portada">
+                                    <x-rock-icon name="close" />
+                                </button>
                             </div>
                         @endif
-                        <input type="file" 
-                               name="cover_image" 
-                               id="cover_image" 
+                        <input type="file"
+                               name="cover_image"
+                               id="cover_image"
                                accept="image/jpeg,image/png,image/webp"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('cover_image') border-red-500 @enderror">
-                        <p class="mt-1 text-sm text-gray-500">JPEG, PNG o WebP. Máximo 10MB. {{ $event->coverImage ? 'Subir nueva imagen reemplazará la actual.' : '' }}</p>
+                               class="rf-input">
+                        <p class="rf-hint">JPEG, PNG o WebP. Máximo 10MB. {{ $event->coverImage ? 'Subir nueva imagen reemplazará la actual.' : '' }}</p>
                         @error('cover_image')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="rf-error"><x-rock-icon name="alert" />{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Current Flyer Image -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Imagen de Flyer</label>
+                    <div @class(['rf-field', 'is-error' => $errors->has('flyer_image')])>
+                        <label for="flyer_image" class="rf-label">Imagen de Flyer</label>
                         @if($event->flyerImage)
-                            <div class="mb-4">
-                                <div class="relative inline-block">
-                                    <img src="{{ route('media.show', $event->flyerImage) }}" 
-                                         alt="Flyer actual" 
-                                         class="w-48 h-auto object-contain rounded-lg">
-                                    <button type="button" 
-                                            onclick="document.getElementById('delete-flyer-form').submit()"
-                                            class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                        </svg>
-                                    </button>
-                                </div>
+                            <div class="relative inline-block self-start mb-2">
+                                <img src="{{ route('media.show', $event->flyerImage) }}"
+                                     alt="Flyer actual"
+                                     class="w-48 h-auto object-contain border border-rule">
+                                <button type="button"
+                                        onclick="document.getElementById('delete-flyer-form').submit()"
+                                        class="rf-iconbtn rf-iconbtn-solid rf-iconbtn-danger absolute -top-3 -right-3 rf-iconbtn-sm"
+                                        title="Eliminar flyer" aria-label="Eliminar flyer">
+                                    <x-rock-icon name="close" />
+                                </button>
                             </div>
                         @endif
-                        <input type="file" 
-                               name="flyer_image" 
-                               id="flyer_image" 
+                        <input type="file"
+                               name="flyer_image"
+                               id="flyer_image"
                                accept="image/jpeg,image/png,image/webp"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('flyer_image') border-red-500 @enderror">
-                        <p class="mt-1 text-sm text-gray-500">JPEG, PNG o WebP. Máximo 10MB. Se muestra junto a la info del evento. {{ $event->flyerImage ? 'Subir nueva imagen reemplazará la actual.' : '' }}</p>
+                               class="rf-input">
+                        <p class="rf-hint">JPEG, PNG o WebP. Máximo 10MB. Se muestra junto a la info del evento. {{ $event->flyerImage ? 'Subir nueva imagen reemplazará la actual.' : '' }}</p>
                         @error('flyer_image')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="rf-error"><x-rock-icon name="alert" />{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
             </div>
 
-            <div class="mt-8 pt-6 border-t border-gray-200 flex items-center justify-end gap-4">
-                <a href="{{ route('admin.events.index') }}" class="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors">
-                    Cancelar
-                </a>
-                <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-                    Guardar Cambios
-                </button>
+            <div class="mt-8 pt-6 border-t border-rule flex flex-wrap items-center justify-end gap-6">
+                <x-rf-button :href="route('admin.events.index')" variant="ghost">Cancelar</x-rf-button>
+                <x-rf-button type="submit" variant="primary">Guardar Cambios</x-rf-button>
             </div>
         </form>
     </div>
 
     <!-- Hidden forms for image deletion (outside the main form to avoid nesting) -->
     @if($event->coverImage)
-        <form id="delete-cover-form" 
-              action="{{ route('admin.events.delete-cover', $event) }}" 
-              method="POST" 
+        <form id="delete-cover-form"
+              action="{{ route('admin.events.delete-cover', $event) }}"
+              method="POST"
               class="hidden"
               onsubmit="return confirm('¿Eliminar esta imagen?')">
             @csrf
@@ -211,9 +198,9 @@
     @endif
 
     @if($event->flyerImage)
-        <form id="delete-flyer-form" 
-              action="{{ route('admin.events.delete-flyer', $event) }}" 
-              method="POST" 
+        <form id="delete-flyer-form"
+              action="{{ route('admin.events.delete-flyer', $event) }}"
+              method="POST"
               class="hidden"
               onsubmit="return confirm('¿Eliminar esta imagen?')">
             @csrf
@@ -224,74 +211,75 @@
     <!-- Quick Actions -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Links -->
-        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-900">Enlaces de Boletos</h2>
-                <a href="{{ route('admin.events.links.index', $event) }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                    Gestionar →
+        <section class="rf-panel rf-panel-flat">
+            <div class="rf-panel-h">
+                <h2>Enlaces de Boletos</h2>
+                <a href="{{ route('admin.events.links.index', $event) }}" class="rf-link">
+                    Gestionar <x-rock-icon name="arrow-right" />
                 </a>
             </div>
-            <div class="p-6">
+            <div class="rf-panel-b">
                 @if($event->links->count() > 0)
                     <ul class="space-y-2">
                         @foreach($event->links as $link)
-                            <li class="flex items-center gap-2 text-sm">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                                </svg>
-                                <span class="text-gray-700">{{ $link->label }}</span>
+                            <li class="flex items-center gap-3 text-sm">
+                                <x-rock-icon name="ticket" :size="18" class="text-riff-text" />
+                                <span>{{ $link->label }}</span>
                             </li>
                         @endforeach
                     </ul>
                 @else
-                    <p class="text-gray-500 text-sm">No hay enlaces configurados</p>
+                    <p class="text-smoke text-sm">No hay enlaces configurados</p>
                 @endif
             </div>
-        </div>
+        </section>
 
         <!-- Gallery -->
-        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div class="p-6 border-b border-gray-200 flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-900">Galería</h2>
-                <a href="{{ route('admin.events.gallery.index', $event) }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
-                    Gestionar →
+        <section class="rf-panel rf-panel-flat">
+            <div class="rf-panel-h">
+                <h2>Galería</h2>
+                <a href="{{ route('admin.events.gallery.index', $event) }}" class="rf-link">
+                    Gestionar <x-rock-icon name="arrow-right" />
                 </a>
             </div>
-            <div class="p-6">
+            <div class="rf-panel-b">
                 @if($event->galleryImages->count() > 0)
                     <div class="flex gap-2 flex-wrap">
                         @foreach($event->galleryImages->take(6) as $image)
-                            <img src="{{ route('media.show', $image) }}" 
-                                 alt="" 
-                                 class="w-16 h-16 object-cover rounded">
+                            <img src="{{ route('media.show', $image) }}"
+                                 alt=""
+                                 class="w-16 h-16 object-cover border border-rule">
                         @endforeach
                         @if($event->galleryImages->count() > 6)
-                            <div class="w-16 h-16 bg-gray-100 rounded flex items-center justify-center">
-                                <span class="text-sm text-gray-500">+{{ $event->galleryImages->count() - 6 }}</span>
+                            <div class="w-16 h-16 bg-cab border border-rule flex items-center justify-center">
+                                <span class="font-mono text-sm text-ash">+{{ $event->galleryImages->count() - 6 }}</span>
                             </div>
                         @endif
                     </div>
                 @else
-                    <p class="text-gray-500 text-sm">No hay imágenes en la galería</p>
+                    <p class="text-smoke text-sm">No hay imágenes en la galería</p>
                 @endif
             </div>
-        </div>
+        </section>
     </div>
 
     <!-- Danger Zone -->
-    <div class="mt-6 bg-red-50 rounded-xl border border-red-200 overflow-hidden">
-        <div class="p-6">
-            <h2 class="text-lg font-semibold text-red-800 mb-2">Zona de Peligro</h2>
-            <p class="text-red-600 text-sm mb-4">Esta acción no se puede deshacer.</p>
-            <form action="{{ route('admin.events.destroy', $event) }}" 
-                  method="POST" 
+    <section class="mt-6 rf-panel rf-panel-flat border-danger/60 border-l-4 border-l-danger">
+        <div class="rf-panel-b flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h2 class="font-display font-extrabold text-2xl uppercase text-danger">Zona de Peligro</h2>
+                <p class="text-ash text-sm mt-1">Esta acción no se puede deshacer.</p>
+            </div>
+            <form action="{{ route('admin.events.destroy', $event) }}"
+                  method="POST"
                   onsubmit="return confirm('¿Estás seguro de eliminar este evento? Esta acción no se puede deshacer.')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors">
+                <button type="submit" class="rf-btn rf-btn-danger">
+                    <x-rock-icon name="trash" />
                     Eliminar Evento
                 </button>
             </form>
         </div>
-    </div>
+    </section>
 @endsection

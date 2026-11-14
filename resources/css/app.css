@@ -42,6 +42,8 @@
     .rf-btn-secondary:hover { background: theme('colors.bone'); color: theme('colors.void'); }
     .rf-btn-ghost { background: transparent; color: theme('colors.ash'); padding-left: 0; padding-right: 0; }
     .rf-btn-ghost:hover { color: theme('colors.bone'); }
+    .rf-btn-danger { background: transparent; color: theme('colors.danger'); border-color: theme('colors.danger'); }
+    .rf-btn-danger:hover { background: theme('colors.danger'); color: theme('colors.void'); }
     .rf-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
 
     /* InfoChip */
@@ -91,14 +93,40 @@
 
     /* Field: label + input/textarea + hint/error */
     .rf-field { display: flex; flex-direction: column; gap: 6px; }
-    .rf-input { appearance: none; font: 400 15px/24px theme('fontFamily.sans'); color: theme('colors.bone'); background: theme('colors.cab');
+    .rf-input, .rf-select { appearance: none; font: 400 15px/24px theme('fontFamily.sans'); color: theme('colors.bone'); background-color: theme('colors.cab');
         border: 2px solid theme('colors.rule-strong'); border-radius: 0; padding: 10px 16px; width: 100%; }
     .rf-input::placeholder { color: theme('colors.smoke'); }
-    .rf-input:hover { border-color: theme('colors.ash'); }
-    .rf-input:focus { border-color: theme('colors.bone'); box-shadow: none; outline: 2px solid theme('colors.focus'); outline-offset: 2px; }
+    .rf-input:hover, .rf-select:hover { border-color: theme('colors.ash'); }
+    .rf-input:focus, .rf-select:focus { border-color: theme('colors.bone'); box-shadow: none; outline: 2px solid theme('colors.focus'); outline-offset: 2px; }
+    .rf-select { padding-right: 44px; cursor: pointer;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23b3ada2' stroke-width='1.75' stroke-linecap='square'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 16px center; background-size: 16px; }
     textarea.rf-input { min-height: 160px; resize: vertical; }
     .rf-hint { font: 400 13px/20px theme('fontFamily.sans'); color: theme('colors.smoke'); }
-    .rf-field.is-error .rf-input { border-color: theme('colors.danger'); }
+    .rf-field.is-error .rf-input, .rf-field.is-error .rf-select { border-color: theme('colors.danger'); }
+    .rf-code { font: 400 12px/16px theme('fontFamily.mono'); letter-spacing: .04em; color: theme('colors.ash'); }
+
+    /* Choice: square checkbox / radio with a label */
+    .rf-choice { display: inline-flex; align-items: center; gap: 12px; cursor: pointer; color: theme('colors.bone'); font: 400 15px/24px theme('fontFamily.sans'); }
+    .rf-choice input { appearance: none; margin: 0; flex-shrink: 0; width: 20px; height: 20px; border: 2px solid theme('colors.rule-strong'); border-radius: 0;
+        background: theme('colors.void') center / 0 no-repeat; cursor: pointer; transition: border-color 120ms, background-size 120ms; }
+    .rf-choice input:hover:not(:disabled) { border-color: theme('colors.bone'); }
+    .rf-choice input:focus { box-shadow: none; }
+    .rf-choice input:focus-visible { outline: 2px solid theme('colors.focus'); outline-offset: 2px; }
+    .rf-choice input[type=radio]:checked { border-color: theme('colors.bone'); background-image: linear-gradient(theme('colors.bone'), theme('colors.bone')); background-size: 8px 8px; }
+    .rf-choice input[type=checkbox]:checked { border-color: theme('colors.riff'); background-color: theme('colors.riff'); background-size: 14px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23f7f3ec' stroke-width='2.5' stroke-linecap='square'%3E%3Cpath d='M3 8.5l3 3 7-7'/%3E%3C/svg%3E"); }
+    .rf-choice input:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* DataTable */
+    .rf-table-wrap { background: theme('colors.amp'); border: 1px solid theme('colors.rule'); overflow-x: auto; }
+    .rf-table { width: 100%; border-collapse: collapse; font: 400 13px/20px theme('fontFamily.sans'); }
+    .rf-table th { text-align: left; font: 700 11px/16px theme('fontFamily.sans'); letter-spacing: .16em; text-transform: uppercase; color: theme('colors.ash');
+        background: theme('colors.steel'); padding: 10px 16px; }
+    .rf-table td { padding: 10px 16px; border-top: 1px solid theme('colors.rule'); color: theme('colors.bone'); }
+    .rf-table .is-num { text-align: right; font-family: theme('fontFamily.mono'); }
+    .rf-table tfoot td { background: theme('colors.cab'); font-weight: 700; border-top: 2px solid theme('colors.rule-strong'); }
+    .rf-table tr:hover td { background: color-mix(in srgb, theme('colors.steel') 40%, transparent); }
     .rf-error { display: flex; align-items: center; gap: 6px; font: 600 13px/20px theme('fontFamily.sans'); color: theme('colors.danger'); }
     .rf-error .rf-icon { width: 16px; height: 16px; }
 
@@ -155,4 +183,64 @@
         border: 2px solid theme('colors.rule-strong'); color: theme('colors.bone'); transition: border-color 120ms; }
     .zp-soc:hover { border-color: theme('colors.bone'); }
     .zp-soc:focus-visible { outline: 2px solid theme('colors.focus'); outline-offset: 2px; }
+
+    /* ---- Admin shell: PageHeader, Panel, IconButton, Alert, TextLink, Modal, SideNav (ported from bundle.css) ---- */
+    .rf-panel { background: theme('colors.amp'); border: 1px solid theme('colors.rule'); border-top: 4px solid theme('colors.riff'); }
+    .rf-panel-flat { border-top: 1px solid theme('colors.rule'); }
+    .rf-panel-h { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; border-bottom: 1px solid theme('colors.rule'); }
+    .rf-panel-h h2, .rf-panel-title { margin: 0; font: 800 24px/1.05 theme('fontFamily.display'); letter-spacing: .01em; text-transform: uppercase; color: theme('colors.bone'); }
+    .rf-panel-b { padding: 24px; }
+    .rf-panel-band { padding: 20px 24px; background: theme('colors.cab'); border-bottom: 1px solid theme('colors.rule'); }
+    .rf-panel-f { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px;
+        border-top: 1px solid theme('colors.rule'); background: theme('colors.cab'); }
+
+    .rf-page-h { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 32px;
+        padding-bottom: 20px; border-bottom: 2px solid theme('colors.rule'); }
+    .rf-page-h h1, .rf-page-title { margin: 6px 0 0; font: 900 56px/.9 theme('fontFamily.display'); text-transform: uppercase; color: theme('colors.bone'); }
+    .rf-page-sub { margin: 8px 0 0; font: 400 15px/24px theme('fontFamily.sans'); color: theme('colors.ash'); }
+    @media (max-width: 639px) { .rf-page-h { flex-direction: column; align-items: flex-start; } .rf-page-h h1, .rf-page-title { font-size: 44px; } }
+
+    .rf-iconbtn { appearance: none; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0;
+        color: theme('colors.ash'); background: transparent; border: 1px solid transparent; border-radius: 0; cursor: pointer;
+        text-decoration: none; transition: color 120ms, border-color 120ms, background-color 120ms; }
+    .rf-iconbtn .rf-icon { width: 18px; height: 18px; }
+    .rf-iconbtn:hover { color: theme('colors.bone'); border-color: theme('colors.rule-strong'); }
+    .rf-iconbtn-solid { background: theme('colors.void'); color: theme('colors.bone'); border-color: theme('colors.rule-strong'); }
+    .rf-iconbtn-solid:hover { border-color: theme('colors.bone'); }
+    .rf-iconbtn-danger:hover { color: theme('colors.danger'); border-color: theme('colors.danger'); }
+    .rf-iconbtn-sm { width: 32px; height: 32px; }
+    .rf-iconbtn:focus-visible { outline: 2px solid theme('colors.focus'); outline-offset: 2px; }
+
+    .rf-alert { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: theme('colors.cab'); color: theme('colors.bone');
+        border: 1px solid theme('colors.rule'); border-left: 4px solid theme('colors.ok'); font: 600 14px/20px theme('fontFamily.sans'); }
+    .rf-alert .rf-icon { width: 20px; height: 20px; color: theme('colors.ok'); }
+    .rf-alert-danger { border-left-color: theme('colors.danger'); }
+    .rf-alert-danger .rf-icon { color: theme('colors.danger'); }
+
+    .rf-link { display: inline-flex; align-items: center; gap: 6px; font: 800 12px/16px theme('fontFamily.sans'); letter-spacing: .1em; text-transform: uppercase;
+        color: theme('colors.riff-text'); text-decoration: none; transition: color 120ms; }
+    .rf-link:hover { color: theme('colors.bone'); }
+    .rf-link .rf-icon { width: 16px; height: 16px; transition: transform 120ms; }
+    .rf-link:hover .rf-icon { transform: translateX(3px); }
+    .rf-link:focus-visible { outline: 2px solid theme('colors.focus'); outline-offset: 2px; }
+
+    .rf-scrim { position: fixed; inset: 0; background: rgba(10, 10, 10, .8); }
+    .rf-modal { background: theme('colors.amp'); color: theme('colors.bone'); border: 2px solid theme('colors.rule-strong'); width: 100%; max-width: 448px; }
+
+    .rf-sidenav { display: flex; flex-direction: column; gap: 4px; padding: 24px 0; background: theme('colors.amp'); }
+    .rf-side-link { box-sizing: border-box; appearance: none; display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px;
+        font: 700 13px/20px theme('fontFamily.sans'); letter-spacing: .12em; text-transform: uppercase; text-align: left; color: theme('colors.ash');
+        background: transparent; border: 0; text-decoration: none; cursor: pointer; transition: background-color 120ms, color 120ms; }
+    .rf-side-link .rf-icon { width: 20px; height: 20px; }
+    .rf-side-link:hover { color: theme('colors.bone'); background: theme('colors.cab'); }
+    .rf-side-on, .rf-side-on:hover { background: theme('colors.cab'); color: theme('colors.bone'); box-shadow: inset 3px 0 0 theme('colors.riff'); }
+    .rf-side-link:focus-visible { outline: 2px solid theme('colors.focus'); outline-offset: -2px; }
+    .rf-side-rule { height: 0; margin: 16px 12px; border-top: 1px solid theme('colors.rule'); }
+
+    /* File picker inside a Field */
+    .rf-input[type=file] { padding: 8px; cursor: pointer; font-size: 14px; color: theme('colors.ash'); }
+    .rf-input[type=file]::file-selector-button { font: 800 12px/16px theme('fontFamily.sans'); letter-spacing: .08em; text-transform: uppercase; color: theme('colors.bone');
+        background: transparent; border: 2px solid theme('colors.bone'); border-radius: 0; padding: 7px 14px; margin-right: 12px;
+        cursor: pointer; transition: background-color 120ms, color 120ms; }
+    .rf-input[type=file]::file-selector-button:hover { background: theme('colors.bone'); color: theme('colors.void'); }
 }

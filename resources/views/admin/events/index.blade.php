@@ -3,138 +3,100 @@
 @section('title', 'Eventos')
 
 @section('content')
-    <div class="flex items-center justify-between mb-6">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900">Eventos</h1>
-            <p class="text-gray-600">Gestiona los eventos del sitio</p>
-        </div>
-        <a href="{{ route('admin.events.create') }}" 
-           class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
+    <x-rf-page-header eyebrow="Panel" title="Eventos" sub="Gestiona los eventos del sitio">
+        <x-rf-button :href="route('admin.events.create')" variant="primary">
+            <x-rock-icon name="plus" />
             Nuevo Evento
-        </a>
-    </div>
+        </x-rf-button>
+    </x-rf-page-header>
 
-    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        @if($events->count() > 0)
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-gray-50 border-b border-gray-200">
+    @if($events->count() > 0)
+        <div class="rf-table-wrap">
+            <table class="rf-table">
+                <thead>
+                    <tr>
+                        <th class="w-16">ID</th>
+                        <th>Evento</th>
+                        <th>Fecha</th>
+                        <th>Ubicación</th>
+                        <th>Estado</th>
+                        <th class="text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($events as $event)
                         <tr>
-                            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider w-16">ID</th>
-                            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Evento</th>
-                            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Ubicación</th>
-                            <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                            <th class="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @foreach($events as $event)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4">
-                                    <span class="text-sm font-mono text-gray-500">{{ $event->id }}</span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                                            @if($event->coverImage)
-                                                <img src="{{ route('media.show', $event->coverImage) }}" alt="" class="w-full h-full object-cover">
-                                            @else
-                                                <div class="w-full h-full flex items-center justify-center">
-                                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                                    </svg>
-                                                </div>
-                                            @endif
-                                        </div>
-                                        <div class="min-w-0">
-                                            <p class="font-medium text-gray-900 truncate">{{ $event->title }}</p>
-                                            <p class="text-sm text-gray-500">/eventos/{{ $event->slug }}</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <p class="text-gray-900">{{ $event->event_datetime->format('d/m/Y') }}</p>
-                                    <p class="text-sm text-gray-500">{{ $event->event_datetime->format('H:i') }}</p>
-                                </td>
-                                <td class="px-6 py-4 text-gray-500">
-                                    {{ $event->location ?? '-' }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex flex-wrap items-center gap-1.5">
-                                        @if($event->status === 'published')
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                Publicado
-                                            </span>
+                            <td>
+                                <span class="rf-code">{{ $event->id }}</span>
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 overflow-hidden bg-cab border border-rule flex-shrink-0">
+                                        @if($event->coverImage)
+                                            <img src="{{ route('media.show', $event->coverImage) }}" alt="" class="w-full h-full object-cover">
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                Borrador
-                                            </span>
-                                        @endif
-                                        @if($event->is_highlighted)
-                                            <span class="inline-flex items-center whitespace-nowrap px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800" title="Evento destacado">
-                                                ★ Destacado
-                                            </span>
+                                            <div class="w-full h-full flex items-center justify-center text-smoke">
+                                                <x-rock-icon name="image" />
+                                            </div>
                                         @endif
                                     </div>
-                                </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <a href="{{ route('admin.events.edit', $event) }}" 
-                                           class="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                                           title="Editar">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                            </svg>
-                                        </a>
-                                        <a href="{{ route('events.show', $event) }}" 
-                                           target="_blank"
-                                           class="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                                           title="Ver">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                                            </svg>
-                                        </a>
-                                        <form action="{{ route('admin.events.destroy', $event) }}" 
-                                              method="POST" 
-                                              class="inline"
-                                              onsubmit="return confirm('¿Estás seguro de eliminar este evento?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                                                    title="Eliminar">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                                </svg>
-                                            </button>
-                                        </form>
+                                    <div class="min-w-0 max-w-[16rem]">
+                                        <p class="font-display font-extrabold text-lg uppercase leading-tight truncate">{{ $event->title }}</p>
+                                        <p class="rf-code truncate">/eventos/{{ $event->slug }}</p>
                                     </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                                </div>
+                            </td>
+                            <td class="whitespace-nowrap">
+                                <p class="font-mono">{{ $event->event_datetime->format('d/m/Y') }}</p>
+                                <p class="rf-code">{{ $event->event_datetime->format('H:i') }}</p>
+                            </td>
+                            <td class="text-ash min-w-[9rem]">
+                                {{ $event->location ?? '-' }}
+                            </td>
+                            <td>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    @if($event->status === 'published')
+                                        <x-rf-stamp tone="ok" :tilt="0" class="text-xs">Publicado</x-rf-stamp>
+                                    @else
+                                        <x-rf-stamp tone="volt" :tilt="0" class="text-xs">Borrador</x-rf-stamp>
+                                    @endif
+                                    @if($event->is_highlighted)
+                                        <x-rf-stamp tone="riff" :tilt="0" :icon="null" class="text-xs whitespace-nowrap" title="Evento destacado">★ Destacado</x-rf-stamp>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                <div class="flex items-center justify-end gap-1">
+                                    <x-rf-icon-button icon="edit" label="Editar" :href="route('admin.events.edit', $event)" />
+                                    <x-rf-icon-button icon="external" label="Ver en el sitio" :href="route('events.show', $event)" target="_blank" />
+                                    <form action="{{ route('admin.events.destroy', $event) }}"
+                                          method="POST"
+                                          class="inline"
+                                          onsubmit="return confirm('¿Estás seguro de eliminar este evento?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <x-rf-icon-button icon="trash" label="Eliminar" tone="danger" type="submit" />
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
 
             @if($events->hasPages())
-                <div class="px-6 py-4 border-t border-gray-200">
+                <div class="px-4 py-4 border-t border-rule">
                     {{ $events->links() }}
                 </div>
             @endif
-        @else
-            <div class="text-center py-12">
-                <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-                <p class="text-gray-500 mb-4">No hay eventos todavía</p>
-                <a href="{{ route('admin.events.create') }}" class="text-blue-600 hover:text-blue-700 font-medium">
-                    Crear el primer evento
-                </a>
-            </div>
-        @endif
-    </div>
+        </div>
+    @else
+        <div class="rf-panel rf-panel-flat text-center py-12 px-6">
+            <x-rock-icon name="date" class="text-smoke mx-auto mb-4" />
+            <p class="text-ash mb-4">No hay eventos todavía</p>
+            <a href="{{ route('admin.events.create') }}" class="rf-link">
+                Crear el primer evento <x-rock-icon name="arrow-right" />
+            </a>
+        </div>
+    @endif
 @endsection

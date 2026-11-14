@@ -3,119 +3,75 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p class="text-gray-600">Bienvenido al panel de administración</p>
-    </div>
+    <x-rf-page-header eyebrow="Panel" title="Dashboard" sub="Bienvenido al panel de administración" />
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-xl p-6 border border-gray-200">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600">Total Eventos</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $stats['total_events'] }}</p>
-                </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        @foreach([
+            ['label' => 'Total eventos', 'value' => $stats['total_events'], 'sub' => 'En el sitio'],
+            ['label' => 'Publicados', 'value' => $stats['published_events'], 'sub' => 'Visibles al público'],
+            ['label' => 'Próximos', 'value' => $stats['upcoming_events'], 'sub' => 'Con fecha por venir'],
+            ['label' => 'Mensajes', 'value' => $stats['contact_messages'], 'sub' => 'Desde contacto'],
+        ] as $stat)
+            <div class="rf-stat">
+                <span class="rf-label">{{ $stat['label'] }}</span>
+                <p class="rf-stat-value">{{ $stat['value'] }}</p>
+                <p class="rf-stat-sub">{{ $stat['sub'] }}</p>
             </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-6 border border-gray-200">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600">Publicados</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $stats['published_events'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-6 border border-gray-200">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600">Próximos</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $stats['upcoming_events'] }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-6 border border-gray-200">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600">Mensajes</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $stats['contact_messages'] }}</p>
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Upcoming Events -->
-        <div class="bg-white rounded-xl border border-gray-200">
-            <div class="p-6 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-900">Próximos Eventos</h2>
+        <section class="rf-panel rf-panel-flat">
+            <div class="rf-panel-h">
+                <h2>Próximos eventos</h2>
+                <a href="{{ route('admin.events.index') }}" class="rf-link">Ver todos <x-rock-icon name="arrow-right" /></a>
             </div>
-            <div class="p-6">
+            <div class="rf-panel-b">
                 @if($upcomingEvents->count() > 0)
-                    <div class="space-y-4">
+                    <div class="divide-y divide-rule">
                         @foreach($upcomingEvents as $event)
-                            <a href="{{ route('admin.events.edit', $event) }}" class="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                                <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <span class="text-sm font-bold text-blue-600">{{ $event->event_datetime->format('d') }}</span>
-                                </div>
+                            @php($date = $event->event_datetime->copy()->locale('es'))
+                            <a href="{{ route('admin.events.edit', $event) }}" class="flex items-center gap-5 py-4 first:pt-0 last:pb-0 group focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus">
+                                <x-rf-date-tag class="shrink-0" :day="$date->format('d')" :month="str_replace('.', '', $date->isoFormat('MMM'))" />
                                 <div class="flex-1 min-w-0">
-                                    <p class="font-medium text-gray-900 truncate">{{ $event->title }}</p>
-                                    <p class="text-sm text-gray-500">{{ $event->event_datetime->translatedFormat('M Y') }} · {{ $event->location ?? 'Sin ubicación' }}</p>
+                                    <p class="font-display font-extrabold text-xl uppercase leading-tight truncate group-hover:text-riff-text transition-colors">{{ $event->title }}</p>
+                                    <p class="text-sm text-ash truncate">{{ $date->isoFormat('MMMM YYYY') }} · {{ $event->location ?? 'Sin ubicación' }}</p>
                                 </div>
+                                <x-rock-icon name="arrow-right" class="text-smoke group-hover:text-riff-text transition-colors" />
                             </a>
                         @endforeach
                     </div>
                 @else
-                    <p class="text-gray-500 text-center py-8">No hay eventos próximos</p>
+                    <p class="text-smoke text-center py-8">No hay eventos próximos</p>
                 @endif
             </div>
-        </div>
+        </section>
 
         <!-- Recent Messages -->
-        <div class="bg-white rounded-xl border border-gray-200">
-            <div class="p-6 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-900">Mensajes Recientes</h2>
+        <section class="rf-panel rf-panel-flat">
+            <div class="rf-panel-h">
+                <h2>Mensajes recientes</h2>
+                <a href="{{ route('admin.contact-messages.index') }}" class="rf-link">Ver todos <x-rock-icon name="arrow-right" /></a>
             </div>
-            <div class="p-6">
+            <div class="rf-panel-b">
                 @if($recentMessages->count() > 0)
-                    <div class="space-y-4">
+                    <div class="divide-y divide-rule">
                         @foreach($recentMessages as $message)
-                            <a href="{{ route('admin.contact-messages.show', $message) }}" class="block p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="font-medium text-gray-900">{{ $message->name }}</p>
-                                    <span class="text-xs text-gray-500">{{ $message->created_at->diffForHumans() }}</span>
+                            <a href="{{ route('admin.contact-messages.show', $message) }}" class="block py-4 first:pt-0 last:pb-0 group focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus">
+                                <div class="flex items-center justify-between gap-4 mb-1">
+                                    <p class="font-semibold group-hover:text-riff-text transition-colors">{{ $message->name }}</p>
+                                    <span class="rf-code shrink-0">{{ $message->created_at->locale('es')->diffForHumans() }}</span>
                                 </div>
-                                <p class="text-sm text-gray-500 truncate">{{ $message->message }}</p>
+                                <p class="text-sm text-ash truncate">{{ $message->message }}</p>
                             </a>
                         @endforeach
                     </div>
                 @else
-                    <p class="text-gray-500 text-center py-8">No hay mensajes</p>
+                    <p class="text-smoke text-center py-8">No hay mensajes</p>
                 @endif
             </div>
-        </div>
+        </section>
     </div>
 @endsection
