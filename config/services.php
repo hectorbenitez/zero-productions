@@ -2,6 +2,11 @@
 
 return [
 
+    'google_analytics' => [
+        // GA4 property "Zero Productions Web" (account ZeroPass). Public ID; only rendered in production.
+        'measurement_id' => env('GOOGLE_ANALYTICS_MEASUREMENT_ID', 'G-TW25RHP8NM'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Third Party Services

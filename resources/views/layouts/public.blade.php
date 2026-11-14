@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @include('partials.google-analytics')
+
     <title>@yield('title', $settings->company_name ?? 'Zero Productions')</title>
     <meta name="description" content="@yield('description', 'Producción de eventos y conciertos de primer nivel.')">
 
