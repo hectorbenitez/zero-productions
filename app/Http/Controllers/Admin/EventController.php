@@ -194,7 +194,7 @@ class EventController extends Controller
     }
 
     /**
-     * Store cover image in database.
+     * Store cover image.
      */
     private function storeCoverImage(Event $event, $file): void
     {
@@ -205,15 +205,9 @@ class EventController extends Controller
             $oldCover->delete();
         }
 
-        // Create new image record (base64 encode for PostgreSQL compatibility)
-        $image = Image::create([
+        $image = Image::storeUpload($file, [
             'event_id' => $event->id,
             'kind' => 'cover',
-            'mime_type' => $file->getMimeType(),
-            'filename' => $file->getClientOriginalName(),
-            'byte_size' => $file->getSize(),
-            'checksum' => md5_file($file->getRealPath()),
-            'data' => base64_encode(file_get_contents($file->getRealPath())),
         ]);
 
         // Update event with cover image reference
@@ -221,7 +215,7 @@ class EventController extends Controller
     }
 
     /**
-     * Store flyer image in database.
+     * Store flyer image.
      */
     private function storeFlyerImage(Event $event, $file): void
     {
@@ -232,15 +226,9 @@ class EventController extends Controller
             $oldFlyer->delete();
         }
 
-        // Create new image record (base64 encode for PostgreSQL compatibility)
-        $image = Image::create([
+        $image = Image::storeUpload($file, [
             'event_id' => $event->id,
             'kind' => 'flyer',
-            'mime_type' => $file->getMimeType(),
-            'filename' => $file->getClientOriginalName(),
-            'byte_size' => $file->getSize(),
-            'checksum' => md5_file($file->getRealPath()),
-            'data' => base64_encode(file_get_contents($file->getRealPath())),
         ]);
 
         // Update event with flyer image reference

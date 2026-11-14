@@ -44,6 +44,11 @@ class Event extends Model
                 $event->slug = static::generateUniqueSlug($event->title);
             }
         });
+
+        // The DB cascade skips model events, so delete images one by one to remove their files
+        static::deleting(function ($event) {
+            $event->images()->get()->each->delete();
+        });
     }
 
     /**
