@@ -95,10 +95,13 @@
             <!-- Right Column: Flyer Image -->
             @if($event->flyerImage)
                 <div class="max-w-[320px] sm:max-w-[420px] w-full mx-auto lg:mx-0 pr-3 pb-3 lg:sticky lg:top-24">
-                    <a href="{{ route('media.show', $event->flyerImage) }}" target="_blank" class="zp-flyer focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-4">
-                        <img src="{{ route('media.show', $event->flyerImage) }}"
-                             alt="Flyer - {{ $event->title }}">
-                    </a>
+                    <div x-data="lightbox(@js([['src' => route('media.show', $event->flyerImage), 'alt' => 'Flyer - '.$event->title]]))">
+                        <a href="{{ route('media.show', $event->flyerImage) }}" @click.prevent="open(0)" class="zp-flyer focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-4">
+                            <img src="{{ route('media.show', $event->flyerImage) }}"
+                                 alt="Flyer - {{ $event->title }}">
+                        </a>
+                        <x-lightbox />
+                    </div>
                 </div>
             @endif
         </div>
@@ -114,10 +117,11 @@
                     <span class="font-mono text-xs text-smoke">{{ str_pad(count($gallery), 2, '0', STR_PAD_LEFT) }} {{ count($gallery) === 1 ? 'foto' : 'fotos' }}</span>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4"
+                     x-data="lightbox(@js(collect($gallery)->map(fn ($photo) => ['src' => $photo['url'], 'alt' => $event->title.' - '.$photo['filename']])->values()))">
                     @foreach($gallery as $photo)
                         <a href="{{ $photo['url'] }}"
-                           target="_blank"
+                           @click.prevent="open({{ $loop->index }})"
                            @class([
                                'group block overflow-hidden bg-cab border border-rule hover:border-rule-strong focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus focus-visible:outline-offset-2',
                                'col-span-2 aspect-[4/3] md:aspect-auto md:h-80' => $loop->first,
@@ -129,6 +133,7 @@
                                  loading="lazy">
                         </a>
                     @endforeach
+                    <x-lightbox />
                 </div>
             </section>
         @endif
