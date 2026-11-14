@@ -83,6 +83,32 @@ class AdminReorderTest extends TestCase
         }
     }
 
+    /**
+     * The edit buttons pass their values to inline JS; quotes, apostrophes and line breaks
+     * must arrive escaped instead of closing the string literal or the attribute.
+     */
+    public function test_edit_buttons_escape_values_passed_to_inline_js(): void
+    {
+        Storage::fake('s3');
+        $event = $this->makeEvent();
+        $link = EventLink::create([
+            'event_id' => $event->id,
+            'label' => 'D\'Rock "Live"',
+            'url' => 'https://example.com/?a=1&b=2',
+            'position' => 0,
+        ]);
+        [$image] = $this->makeGallery($event);
+        $image->update(['caption' => "Línea 1\nD'Rock"]);
+        $user = User::factory()->create();
+
+        $html = $this->actingAs($user)->get(route('admin.events.links.index', $event))->getContent();
+        $this->assertStringNotContainsString("'D&#039;Rock", $html);
+        $this->assertStringContainsString("editLink({$link->id}, 'D\\u0027Rock \\u0022Live\\u0022', 'https:\\/\\/example.com\\/?a=1\\u0026b=2')", $html);
+
+        $html = $this->actingAs($user)->get(route('admin.events.gallery.index', $event))->getContent();
+        $this->assertStringContainsString("editCaption({$image->id}, 'L\\u00ednea 1\\nD\\u0027Rock')", $html);
+    }
+
     public function test_links_reorder_saves_the_submitted_order(): void
     {
         $event = $this->makeEvent();

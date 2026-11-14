@@ -76,7 +76,7 @@
 
                                 <div class="flex items-center gap-1">
                                     <button type="button"
-                                            onclick="editLink({{ $link->id }}, '{{ $link->label }}', '{{ $link->url }}')"
+                                            onclick="editLink({{ $link->id }}, @js($link->label), @js($link->url))"
                                             class="rf-iconbtn" title="Editar" aria-label="Editar">
                                         <x-rock-icon name="edit" />
                                     </button>

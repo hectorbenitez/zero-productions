@@ -67,7 +67,7 @@
                                         <x-rock-icon name="drag" />
                                     </button>
                                     <button type="button"
-                                            onclick="editCaption({{ $image->id }}, '{{ addslashes($image->caption ?? '') }}')"
+                                            onclick="editCaption({{ $image->id }}, @js($image->caption ?? ''))"
                                             class="rf-iconbtn rf-iconbtn-solid" title="Editar descripción" aria-label="Editar descripción">
                                         <x-rock-icon name="edit" />
                                     </button>
