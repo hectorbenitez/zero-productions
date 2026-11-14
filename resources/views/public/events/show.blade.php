@@ -13,7 +13,7 @@
     $date = $event->event_datetime->copy()->locale('es');
     $month = str_replace('.', '', $date->isoFormat('MMM'));
     $longDate = ucwords(str_replace('.', '', $date->isoFormat('ddd DD MMM YYYY')));
-    $gallery = $event->filesystem_gallery;
+    $gallery = $event->public_gallery;
 @endphp
 
 @section('content')
@@ -106,7 +106,7 @@
             @endif
         </div>
 
-        <!-- Gallery Section (filesystem-based: public/assets/gallery/{event_id}/) -->
+        <!-- Gallery Section (uploaded gallery images) -->
         @if(count($gallery) > 0)
             <section class="pt-16 sm:pt-24">
                 <div class="zp-sec-h">
@@ -118,7 +118,7 @@
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4"
-                     x-data="lightbox(@js(collect($gallery)->map(fn ($photo) => ['src' => $photo['url'], 'alt' => $event->title.' - '.$photo['filename']])->values()))">
+                     x-data="lightbox(@js(collect($gallery)->map(fn ($photo) => ['src' => $photo['url'], 'alt' => $photo['alt']])->values()))">
                     @foreach($gallery as $photo)
                         <a href="{{ $photo['url'] }}"
                            @click.prevent="open({{ $loop->index }})"
@@ -128,7 +128,7 @@
                                'aspect-square md:aspect-auto md:h-80' => ! $loop->first,
                            ])>
                             <img src="{{ $photo['url'] }}"
-                                 alt="{{ $event->title }} - {{ $photo['filename'] }}"
+                                 alt="{{ $photo['alt'] }}"
                                  class="w-full h-full object-cover transition-transform duration-[400ms] group-hover:scale-[1.04]"
                                  loading="lazy">
                         </a>
