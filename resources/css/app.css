@@ -252,6 +252,7 @@
         cursor: pointer; transition: background-color 120ms, color 120ms; }
     .rf-input[type=file]::file-selector-button:hover { background: theme('colors.bone'); color: theme('colors.void'); }
 
-    /* Drag-and-drop reordering (resources/js/sortable.js) */
-    [data-sortable-item].is-dragging { opacity: .45; }
 }
+
+/* Drag-and-drop reordering (resources/js/sortable.js); outside @layer so purging keeps it */
+[data-sortable-item].is-dragging { opacity: .45; }
