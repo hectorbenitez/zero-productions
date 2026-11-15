@@ -195,6 +195,29 @@ class Event extends Model
     }
 
     /**
+     * Photos for the public gallery: uploaded gallery images (object storage),
+     * or the legacy public/assets/gallery/{id}/ folder until it is imported.
+     *
+     * @return array<int, array{url: string, alt: string}>
+     */
+    public function getPublicGalleryAttribute(): array
+    {
+        if ($this->galleryImages->isNotEmpty()) {
+            return $this->galleryImages
+                ->map(fn (Image $image) => [
+                    'url' => $image->url,
+                    'alt' => $image->caption ?: $this->title,
+                ])
+                ->all();
+        }
+
+        return array_map(fn (array $photo) => [
+            'url' => $photo['url'],
+            'alt' => $this->title,
+        ], $this->filesystem_gallery);
+    }
+
+    /**
      * Get filesystem gallery images for this event.
      * Looks in public/assets/gallery/{event_id}/ for image files.
      *
