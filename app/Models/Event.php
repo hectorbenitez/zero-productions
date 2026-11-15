@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class Event extends Model
@@ -195,71 +194,18 @@ class Event extends Model
     }
 
     /**
-     * Photos for the public gallery: uploaded gallery images (object storage),
-     * or the legacy public/assets/gallery/{id}/ folder until it is imported.
+     * Photos for the public gallery: the event's uploaded gallery images.
      *
      * @return array<int, array{url: string, alt: string}>
      */
     public function getPublicGalleryAttribute(): array
     {
-        if ($this->galleryImages->isNotEmpty()) {
-            return $this->galleryImages
-                ->map(fn (Image $image) => [
-                    'url' => $image->url,
-                    'alt' => $image->caption ?: $this->title,
-                ])
-                ->all();
-        }
-
-        return array_map(fn (array $photo) => [
-            'url' => $photo['url'],
-            'alt' => $this->title,
-        ], $this->filesystem_gallery);
-    }
-
-    /**
-     * Get filesystem gallery images for this event.
-     * Looks in public/assets/gallery/{event_id}/ for image files.
-     *
-     * @return array Array of ['url' => string, 'filename' => string]
-     */
-    public function getFilesystemGalleryAttribute(): array
-    {
-        $galleryPath = public_path("assets/gallery/{$this->id}");
-
-        if (! File::isDirectory($galleryPath)) {
-            return [];
-        }
-
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-        $images = [];
-
-        $files = File::files($galleryPath);
-
-        // Sort files by name for consistent ordering
-        usort($files, function ($a, $b) {
-            return strcmp($a->getFilename(), $b->getFilename());
-        });
-
-        foreach ($files as $file) {
-            $extension = strtolower($file->getExtension());
-            if (in_array($extension, $allowedExtensions)) {
-                $images[] = [
-                    'url' => asset("assets/gallery/{$this->id}/{$file->getFilename()}"),
-                    'filename' => $file->getFilename(),
-                ];
-            }
-        }
-
-        return $images;
-    }
-
-    /**
-     * Check if the event has a filesystem gallery.
-     */
-    public function getHasFilesystemGalleryAttribute(): bool
-    {
-        return count($this->filesystem_gallery) > 0;
+        return $this->galleryImages
+            ->map(fn (Image $image) => [
+                'url' => $image->url,
+                'alt' => $image->caption ?: $this->title,
+            ])
+            ->all();
     }
 
     /**
