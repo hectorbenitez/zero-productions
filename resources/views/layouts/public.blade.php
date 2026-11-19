@@ -9,11 +9,14 @@
 
     <title>@yield('title', $settings->company_name ?? 'Zero Productions')</title>
     <meta name="description" content="@yield('description', 'Producción de eventos y conciertos de primer nivel.')">
+    {{-- One address per page: drops the query string so tracking links don't count as duplicates. --}}
+    <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Open Graph -->
     <meta property="og:title" content="@yield('og_title', $settings->company_name ?? 'Zero Productions')">
     <meta property="og:description" content="@yield('og_description', 'Producción de eventos y conciertos de primer nivel.')">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
     @hasSection('og_image')
         <meta property="og:image" content="@yield('og_image')">
     @endif
